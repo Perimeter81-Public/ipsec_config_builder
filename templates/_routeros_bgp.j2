@@ -1,0 +1,17 @@
+### Add Loopback Interface for Peering
+/interface bridge
+add name=lo0
+
+## BGP Config
+/routing bgp instance
+set default as={{prem_asn}} client-to-client-reflection=yes !cluster-id !confederation disabled=no ignore-as-path-len=no name=default \
+    out-filter="" redistribute-connected=yes redistribute-ospf=no redistribute-other-bgp=no redistribute-rip=no redistribute-static=\
+    no router-id={{prem_bgp_ip}} routing-table=""
+/routing bgp network
+add disabled=no network={{prem_net}} synchronize=yes
+/routing bgp peer
+add address-families=ip !allow-as-in as-override=no default-originate=never disabled=no hold-time=3m in-filter="" instance=default \
+    !keepalive-time !max-prefix-limit !max-prefix-restart-time multihop=no name=VPN nexthop-choice=default out-filter="" passive=no \
+    remote-address={{p81_bgp_ip}} remote-as={{p81_asn}} remove-private-as=no route-reflect=no tcp-md5-key="" ttl=255 update-source=lo0 \
+    use-bfd=no
+add name=VPN remote-address={{p81_bgp_ip}} update-source=lo0

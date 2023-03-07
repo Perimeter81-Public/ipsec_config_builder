@@ -1,0 +1,45 @@
+#The Following is a sample configuration for an IPSEC IKEV2 Configuration for a Mikrotik RouterOS 6.48.1
+
+#Define the ISAKMP Encryption Algorithms and Name a Proposal
+/ip ipsec proposal
+add auth-algorithms={{integ}} enc-algorithms={{encry}}-cbc,{{encry}}-ctr,{{encry}}-gcm name=<PROPOSAL> pfs-group={{dhg}}
+
+#Define the IPSEC Encryption Algorithms and Name a Profile
+/ip ipsec profile
+add dh-group={{dhg}} dpd-interval={{dpd}}s enc-algorithm={{encry}} hash-algorithm={{integ}} name={{p81_gw}}
+
+#Define the Peer and ISKAKMP Mode
+/ip ipsec peer
+add address={{p81_ip}} exchange-mode={{ike_ver}} local-address={{prem_ip}} name={{p81_gw}} profile={{p81_gw}}
+
+#Defind the Identity and Pre Share Key
+/ip ipsec identity
+add my-id=address:{{prem_ip}} peer={{p81_gw}} secret={{psk}}
+
+#Create the Interesting Traffic Profile
+/ip ipsec policy
+add dst-address={{prem_net}} peer={{p81_gw}} proposal=<PROPOSAL> sa-dst-address={{p81_ip}} sa-src-address={{prem_ip}} src-address={{prem_net}} tunnel=yes
+
+#Ensure the Firewall Permits the Access
+/ip firewall address-list
+
+
+# Create Address Lists to Use in Policy
+/ip firewall address-list
+add address={{p81_ip}} list=IPSECPEER
+add address={{prem_net}} list=VPN
+add address={{prem_net}} list=VPN
+
+#Create Firewall access for IPSEC
+/ip firewall filter
+add action=accept chain=input dst-port=500,4500 protocol=udp src-address-list=IPSECPEER
+
+# Allow Access between the Subnets
+/ip firewall filter
+add action=accept chain=forward src-address-list=VPN
+
+#Perform Identity NAT on the Traffic between the networks
+/ip firewall nat
+add action=accept chain=srcnat dst-address-list=VPN src-address-list=VPN
+
+{% include "/templates/_routeros_bgp.j2" %}
