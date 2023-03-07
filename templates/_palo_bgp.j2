@@ -1,0 +1,56 @@
+set network tunnel ipsec {{p81_gw}} auto-key proxy-id Proxy4 protocol any
+set network tunnel ipsec {{p81_gw}} auto-key proxy-id Proxy4 local {{prem_bgp_ip}}
+set network tunnel ipsec {{p81_gw}} auto-key proxy-id Proxy4 remote {{p81_bgp_ip}}
+
+set network virtual-router default routing-table ip static-route "Tunnel BGP" path-monitor enable no
+set network virtual-router default routing-table ip static-route "Tunnel BGP" path-monitor failure-condition any
+set network virtual-router default routing-table ip static-route "Tunnel BGP" path-monitor hold-time 2
+set network virtual-router default routing-table ip static-route "Tunnel BGP" bfd profile None
+set network virtual-router default routing-table ip static-route "Tunnel BGP" interface tunnel.1
+set network virtual-router default routing-table ip static-route "Tunnel BGP" metric 10
+set network virtual-router default routing-table ip static-route "Tunnel BGP" destination {{p81_bgp_ip}}/32
+set network virtual-router default routing-table ip static-route "Tunnel BGP" route-table unicast
+
+
+set network virtual-router default protocol bgp enable yes
+set network virtual-router default protocol bgp dampening-profile default cutoff 1.25
+set network virtual-router default protocol bgp dampening-profile default reuse 0.5
+set network virtual-router default protocol bgp dampening-profile default max-hold-time 900
+set network virtual-router default protocol bgp dampening-profile default decay-half-life-reachable 300
+set network virtual-router default protocol bgp dampening-profile default decay-half-life-unreachable 900
+set network virtual-router default protocol bgp dampening-profile default enable yes
+set network virtual-router default protocol bgp routing-options graceful-restart enable yes
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} type ebgp remove-private-as no
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} type ebgp import-nexthop original
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} type ebgp export-nexthop resolve
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} peer-address ip {{p81_bgp_ip }}
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} connection-options incoming-bgp-connection remote-port 0
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} connection-options incoming-bgp-connection allow yes
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} connection-options outgoing-bgp-connection local-port 0
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} connection-options outgoing-bgp-connection allow yes
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} connection-options multihop 0
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} connection-options keep-alive-interval 30
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} connection-options open-delay-time 0
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} connection-options hold-time 90
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} connection-options idle-hold-time 15
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} connection-options min-route-adv-interval 30
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} subsequent-address-family-identifier unicast yes
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} subsequent-address-family-identifier multicast no
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} local-address ip {{prem_bgp_ip }}
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} local-address interface loopback.1
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} bfd profile Inherit-vr-global-setting
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} max-prefixes 5000
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} enable yes
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} peer-as {{ p81_asn }}
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} enable-mp-bgp no
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} address-family-identifier ipv4
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} enable-sender-side-loop-detection yes
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} reflector-client non-client
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} peer {{ prem_bgp_peer }} peering-type unspecified
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} aggregated-confed-as-path yes
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} soft-reset-with-stored-info no
+set network virtual-router default protocol bgp peer-group {{prem_bgp_peer_grp}} enable yes
+set network virtual-router default protocol bgp router-id {{prem_bgp_ip }}
+set network virtual-router default protocol bgp local-as {{ prem_asn }}
+
+
