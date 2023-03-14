@@ -1,0 +1,49 @@
+{# Phase 1 Configuration  #}
+config vpn ipsec phase1-interface
+    edit "{{p81_gw}}"
+        set interface "port1"
+        set ike-version {{ike_ver}}
+        set peertype any
+        set net-device disable
+        set mode-cfg enable
+        set proposal {{encry}}-{{integ}}
+        set dpd on-idle
+        set comments "Phase 1 Config for Perimeter81"
+        set dhgrp {{dhg}}
+        set remote-gw {{p81_ip}}
+        set psksecret ENC {{psk}}
+        set dpd-retrycount {{dpd}}
+        set dpd-retryinterval 30
+    next
+end
+
+{# Phase 2 Configuration # }
+config vpn ipsec phase2-interface
+    edit "{{p81_gw}}"
+        set phase1name "{{p81_gw}}"
+        set proposal {{encry}}-{{integ}}
+        set dhgrp {{dhg}}
+        set auto-negotiate enable
+        set comments "Phase 2 Config for Perimeter81"
+    next
+end
+
+{# Tunnel Interface Config #}
+config system interface
+    edit "{{p81_gw}}"
+        set vdom "root"
+        set ip 0.0.0.0 255.255.255.255
+        set allowaccess ping
+        set type tunnel
+        set snmp-index 5
+        set interface "port1"
+    next
+end
+
+{# Route Config , this is route based build #}
+config router static
+    edit X
+        set dst {{p81_net}}
+        set device "Perimeter81"
+    next
+end

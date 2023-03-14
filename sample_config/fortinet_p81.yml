@@ -1,0 +1,38 @@
+
+config vpn ipsec phase1-interface
+    edit "Perimeter81"
+        set interface "port1"
+        set ike-version 2
+        set peertype any
+        set net-device disable
+        set mode-cfg enable
+        set proposal aes-256-aes-256
+        set dpd on-idle
+        set comments "Phase 1 Config for Perimeter81"
+        set dhgrp 14
+        set remote-gw 131.226.32.161
+        set psksecret ENC passw0rd1
+        set dpd-retrycount 10
+        set dpd-retryinterval 30
+    next
+end
+
+
+config system interface
+    edit "Perimeter81"
+        set vdom "root"
+        set ip 0.0.0.0 255.255.255.255
+        set allowaccess ping
+        set type tunnel
+        set snmp-index 5
+        set interface "port1"
+    next
+end
+
+
+config router static
+    edit X
+        set dst 10.130.0.0 255.255.0.0
+        set device "Perimeter81"
+    next
+end
