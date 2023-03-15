@@ -1,0 +1,72 @@
+{# Define Phase 1 Config #}
+ crypto keyring {{keyring}}
+  pre-shared-key address {{p81_ip}} key {{psk}}
+!p81_tunnel_ip
+crypto isakmp policy 10
+ encr aes 256
+ hash sha256
+ authentication pre-share
+ group {{ dhg }}
+ lifetime 28800
+!
+
+{# Define Phase 1 Profile #}
+crypto isakmp profile {{phase1}}
+   keyring {{keyring}}
+   match identity address {{P81-GW-IP} 255.255.255.255
+   local-address {{prem_ip}}
+
+{# Define Phase 2 Policy #}
+crypto ipsec transform-set {{transform_set_name}} esp-aes 256 esp-sha-hmac
+
+{# Define Phase 2 Profile #}
+crypto ipsec profile {{phase1}}
+ set transform-set {{transform_set_name}}
+ set pfs group14
+ set isakmp-profile {{iskamp-profile-name}}
+
+##Interface Config
+interface {{tunnel_int}}
+ ip address {{tunnel_ip}} 255.255.255.252
+ ip mtu 1400
+ ip nat inside
+ ip tcp adjust-mss 1360
+ tunnel source {{local-public}}
+ tunnel mode ipsec ipv4
+ tunnel destination {{P81-GW-IP}}
+ tunnel protection ipsec profile {{ipsec_profile_name}}
+
+#Routes
+ip route 10.245.0.0 255.255.0.0 {{tunnel_int}}
+
+{# NAT Configuration #}
+access-list 10 permit 10.245.0.0 0.0.255.255
+ip nat pool P81-NAT {{prem_outside_global_first}}  {{prem_outside_global_last}} netmask {{prem_outside_global_mask}}
+ip nat pool P81-NET10 10.245.0.0 10.245.255.255 prefix-length 16
+ip nat inside source list 10 pool P81-NAT
+ip nat inside source list 10 pool P81-NAT overload
+ip nat outside source list 10 pool P81-NET10
+
+{# BGP Config #}
+router bgp {{bgp.localasn}}
+ bgp router-id
+ bgp always-compare-med
+ bgp log-neighbor-changes
+ bgp deterministic-med
+ neighbor P81-VPN peer-group
+ neighbor P81-VPN remote-as 64512
+ neighbor P81-VPN update-source Loopback81
+
+ !
+ address-family ipv4
+  neighbor P81-VPN send-community both
+  neighbor P81-VPN next-hop-self
+  neighbor P81-VPN soft-reconfiguration inbound
+  neighbor {{p81_ip}} route-map {{route_map_in}} in
+  neighbor {{p81_ip} route-map {{route_map_out}} out
+  neighbor {{p81_ip}} activate
+  maximum-paths ibgp 5
+ exit-address-family
+ !
+ address-family ipv4 multicast
+ exit-address-family
