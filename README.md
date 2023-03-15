@@ -10,6 +10,7 @@ a second file for bgp configuration for multi-site tunnels
 - mikrotik 
 - palo alto
 - fortinet 
+- cisco
 
 ### device_vars
 Sample Variable directory that contains the specific variables to each build 
@@ -19,4 +20,6 @@ along with the refernces in the jinja2 build
 This is the rendered output when the jinja2 and the yaml files are composed to produce function 
 configuration per platform
 
+### vendor_cmds
+This is a directory of troubleshooting & informational gathering commands 
 
