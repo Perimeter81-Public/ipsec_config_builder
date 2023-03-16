@@ -17,7 +17,8 @@ Sample Variable directory that contains the specific variables to each build
 along with the refernces in the jinja2 build 
 
 There is unique variable constraints so please make sure you review the chart 
-for vendor to ensure you are complaint to produce functional config. 
+for vendor to ensure you are complaint to produce functional config.
+
 
 ### sample_config
 This is the rendered output when the jinja2 and the yaml files are composed to produce function 
