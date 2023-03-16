@@ -1,0 +1,14 @@
+{# BGP Configuration  #}
+config router bgp
+    set as {{prem_asn}}
+    set router-id {{prem_bgp_ip}}
+    config neighbor
+        edit "{{p81_bgp_ip}}"
+            set remote-as {{p81_asn}}
+        next
+    end
+    config network
+        edit 1
+            set prefix {{prem_net}}
+        next
+    end

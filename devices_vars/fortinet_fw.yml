@@ -9,19 +9,15 @@ p81_bgp_ip: "169.254.100.1"
 
 
 prem_ip: "54.88.191.104"
-prem_net: "0.0.0.0/0"
+prem_net: "172.17.100.0 255.255.255.0"
 prem_asn: "64550"
 prem_bgp_ip: "169.254.100.2"
 prem_bgp_peer_grp: "P81"
 prem_bgp_peer: "P81_NY"
 
-
 psk: "passw0rd1"
-
 # IKEV Version 1 or 2
 ike_ver: "2"
-
-
 # Fortinet represents the proposal by joining the encryption & integrity
   # Example is aes256-sha256
 # Encryption Values
