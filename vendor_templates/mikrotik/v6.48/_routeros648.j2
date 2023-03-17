@@ -18,7 +18,7 @@ add my-id=address:{{prem_ip}} peer={{p81_gw}} secret={{psk}}
 
 #Create the Interesting Traffic Profile
 /ip ipsec policy
-add dst-address={{prem_net}} peer={{p81_gw}} proposal={{p81_gw}}-Proposal sa-dst-address={{p81_ip}} sa-src-address={{prem_ip}} src-address={{prem_net}} tunnel=yes
+add dst-address=0.0.0.0/0 peer={{p81_gw}} proposal={{p81_gw}}-Proposal sa-dst-address={{p81_ip}} sa-src-address={{prem_ip}} src-address=0.0.0.0/0 tunnel=yes
 
 #Ensure the Firewall Permits the Access
 /ip firewall address-list
@@ -28,7 +28,7 @@ add dst-address={{prem_net}} peer={{p81_gw}} proposal={{p81_gw}}-Proposal sa-dst
 /ip firewall address-list
 add address={{p81_ip}} list=IPSECPEER
 add address={{prem_net}} list=VPN
-add address={{prem_net}} list=VPN
+add address={{p81_net}} list=VPN
 
 #Create Firewall access for IPSEC
 /ip firewall filter
@@ -42,4 +42,6 @@ add action=accept chain=forward src-address-list=VPN
 /ip firewall nat
 add action=accept chain=srcnat dst-address-list=VPN src-address-list=VPN
 
-{% include "/templates/_routeros_bgp.j2" %}
+{% if bgp is defined %}
+ {% include "vendor_templates/mikrotik/v6.48/_routeros648_bgp.j2" %}
+{% endif %}

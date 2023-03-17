@@ -15,7 +15,6 @@ set network ike crypto-profiles ipsec-crypto-profiles {{phase2}} dh-group {{ dhg
 
 ### Create IPSEC Peer
 set network ike gateway {{p81_gw}} authentication pre-shared-key {{ psk }}
-set network ike gateway {{p81_gw}} protocol ikev1 dpd enable yes
 set network ike gateway {{p81_gw}} protocol ikev2 dpd enable yes
 set network ike gateway {{p81_gw}} protocol ikev2 dpd interval {{ dpd }}
 set network ike gateway {{p81_gw}} protocol ikev2 ike-crypto-profile
@@ -64,5 +63,7 @@ set rulebase security rules INTERNAL-LANS source-hip any
 set rulebase security rules INTERNAL-LANS destination-hip any
 set rulebase security rules INTERNAL-LANS action allow
 
+{% if bgp is defined %}
+ {% include "vendor_templates/paloalto/panos10/_panos10_bgp.j2" %}
+{% endif %}
 
-{% include "/templates/_palo_bgp.j2" %}

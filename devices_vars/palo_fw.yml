@@ -1,20 +1,16 @@
+#Properties of Premise Device Config
 hostname: "palo01"
-phase1: "Phase1"
-phase2: "Phase2"
+prem_ip: "35.172.43.104"
+prem_net: "172.17.100.0/24"
+
+#Properties of Perimeter81 Config
 p81_gw: "Perimeter81"
 p81_ip: "131.226.32.161"
-p81_net: "0.0.0.0/0"
-p81_asn: "64512"
-p81_bgp_ip: "169.254.100.1"
+p81_net: "10.130.0.0/16"
 
-
-prem_ip: "35.172.43.104"
-prem_net: "0.0.0.0/0"
-prem_asn: "64550"
-prem_bgp_ip: "169.254.100.2"
-prem_bgp_peer_grp: "P81"
-prem_bgp_peer: "P81_NY"
-
+#Shared VPN Properties
+phase1: "Phase1"
+phase2: "Phase2"
 psk: "passw0rd1"
 ike_ver: "ikev2"
 encry: "aes-256"
@@ -23,3 +19,14 @@ dhg: "group14"
 ph1_life: "8"
 ph2_life: "1"
 dpd: "10"
+
+#BGP Config , Uncomment BGP Below to execute
+bgp:
+# Premise BGP
+prem_asn: "64550"
+prem_bgp_ip: "169.254.100.2"
+prem_bgp_peer_grp: "P81"
+prem_bgp_peer: "P81_NY"
+# P81 BGP Config
+p81_asn: "64512"
+p81_bgp_ip: "169.254.100.1"
