@@ -55,7 +55,7 @@
 | Variable | Description                           | Type      | Options                                                   |
 |----------| ------------------------------------- | --------- |-----------------------------------------------------------|
 | phase1   | IKE Profile                           | String    | AlphaNumeric Characters                                   |
-| phase2   | IPSEC Profile                         | String    | AlphaNumeric Characters                                                          |
+| phase2   | IPSEC Profile                         | String    | AlphaNumeric Characters                                   |
 | p81_gw   | IKE Gateway Peer                      | String    | Name , IKEv2 , Intfs , IPs , PSK , NAT-T                  |
 | psk      | Prershare Key                         | String    | Shared Secret Between the IPSEC peers                     |
 | p81_net  | Subnet assigned to P81 VPN            | IP Subnet | Policy Based example 10.255.0.0/16 / Route based 0.0.0.0/0 |

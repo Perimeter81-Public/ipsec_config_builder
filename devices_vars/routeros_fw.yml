@@ -12,6 +12,7 @@ p81_net: "10.130.0.0/16"
 phase1: "Phase1"
 phase2: "Phase2"
 psk: "passw0rd1"
+# IKEV Version 1 or 2
 ike_ver: "ikev2"
 encry: "aes-256"
 integ: "sha256"
@@ -21,24 +22,13 @@ ph2_life: "1"
 dpd: "10"
 
 #BGP Config , Uncomment BGP Below to execute
-#bgp:
+bgp:
 # Premise BGP
 prem_asn: "64550"
 prem_bgp_ip: "169.254.100.2"
 prem_bgp_peer_grp: "P81"
 prem_bgp_peer: "P81_NY"
+
 # P81 BGP Config
 p81_asn: "64512"
 p81_bgp_ip: "169.254.100.1"
-
-
-
-
-
-
-
-
-
-# Diffie Hellan Groups for MT
-#ec2n155  ec2n185  ecp256  ecp384  ecp521  modp768  modp1024  modp1536  modp2048  modp3072  modp4096  modp6144  modp8192
-

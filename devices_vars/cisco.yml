@@ -1,22 +1,44 @@
-hostname:
-psk: "passw0rd1"
+#Properties of Premise Device Config
+hostname: "cisco_iosxe"
+prem_ip: "54.86.139.255"
+prem_net: "172.17.100.0/24"
+
+#Properties of Perimeter81 Config
+p81_gw: "Perimeter81"
+p81_ip: "131.226.32.161"
+p81_net: "10.130.0.0 255.255.0.0"
+
+#Shared VPN Properties
 phase1: "P81-ISKAMP-PROFILE"
-keyring: "P81NY-KEYRING"
-transform_set_name: "P81-TS"
+phase2: "P81-IPSEC-PROFILE"
+psk: "passw0rd1"
+# IKEV Version 1 or 2
 ike_ver: "ikev2"
-encry: "aes-256"
+encry: "aes 256"
 integ: "aes-256"
 dhg: "14"
 ph1_life: "8"
 ph2_life: "1"
 dpd: "10"
-phase2: "P81-IPSEC-PROFILE"
-prem_ip: "35.172.43.104"
-local_lo: "Loopback81"
-tunnel_int: "tunnel 101"
-tunnel_ip: "169.254.37.253"
-p81_ip: "131.226.32.161"
+
+#BGP Config , Uncomment BGP Below to execute
+bgp:
+# Premise BGP
 prem_asn: "64550"
+prem_bgp_ip: "169.254.100.2"
+
+# P81 BGP Config
 p81_asn: "64512"
+p81_bgp_ip: "169.254.100.1"
+
+# Unique Vendors vars
+keyring: "p81-keyring"
+transform_set_name: "p81-transform-set"
 route_map_in: "VPN-1-NONE-IN"
 route_map_out: "VPN-1-NONE-OUT"
+local_lo: "Loopback81"
+tunnel_int: "tunnel 101"
+
+
+
+
