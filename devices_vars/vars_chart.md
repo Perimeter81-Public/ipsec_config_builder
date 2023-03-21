@@ -44,26 +44,26 @@
 | p81_net  | Subnet assigned to P81 VPN              | IPv4 Subnet + Mask | ex: 10.130.0.0 255.255.0.0                              |
 | prem_net | Subnet the client has on their equipment | IP Subnet + Mask   | ex: 172.17.100.0 255.255.255.0                          |
 | ike_ver  | Which protocol version                  | INT                | 1 or 2                                                  |
-| encry    | The cipher suite to use                 | List               | 3des aes128,192,256 aria128,192,256  chacha20poly1305   |
-| integ    | Authentication Hash                     | List               | md5 , sha1,256,384,512 , prfsha1,256,384,512            |
-| dhg      | Diffie Hellman Group                    | List               | 1,2,5,14,15,16,17,18,19,20,21,27,28,29,30,21,32         |
+| encry    | The cipher suite to use                 | List               | 3des, blowfish128 192 256 , aes128 192 256       |
+| integ    | Authentication Hash                     | List               | md5 , sha1 , sha256 , sha384           |
+| dhg      | Diffie Hellman Group                    | List               | 2,5,14,19,20,21          |
 | ph1_life |                                         | Integer            | Time in Hours                                           |
 | ph2_life |                                         | Integer            | Time in Hours                                           |
 | dpd      |                                         | Integer            | Number 1-60                                             |
 
 ### Cisco
-| Variable | Description                           | Type      | Options                                                   |
-|----------| ------------------------------------- | --------- |-----------------------------------------------------------|
-| phase1   | IKE Profile                           | String    | AlphaNumeric Characters                                   |
-| phase2   | IPSEC Profile                         | String    | AlphaNumeric Characters                                   |
-| p81_gw   | IKE Gateway Peer                      | String    | Name , IKEv2 , Intfs , IPs , PSK , NAT-T                  |
-| psk      | Prershare Key                         | String    | Shared Secret Between the IPSEC peers                     |
+| Variable | Description                           | Type      | Options                                                    |
+|----------| ------------------------------------- | --------- |------------------------------------------------------------|
+| phase1   | IKE Profile                           | String    | AlphaNumeric Characters                                    |
+| phase2   | IPSEC Profile                         | String    | AlphaNumeric Characters                                    |
+| p81_gw   | IKE Gateway Peer                      | String    | Name , IKEv2 , Intfs , IPs , PSK , NAT-T                   |
+| psk      | Prershare Key                         | String    | Shared Secret Between the IPSEC peers                      |
 | p81_net  | Subnet assigned to P81 VPN            | IP Subnet | Policy Based example 10.255.0.0/16 / Route based 0.0.0.0/0 |
-| prem_net | Subnet the client has on their equipment | IP Subnet | Policy Based example 10.0.0.0/16 / Route based 0.0.0.0/0  |
-| ike_ver  | Which protocol version                | INT       | 1 or 2                                                    |
-| encry    | The cipher suite to use               | List      | 3des , aes , aes256 , blowfish                            |
-| integ    | Authentication Hash                   | List      | aes256 , sha1                                             |
-| dhg      |                                       | List      | 2,5,14,19,20,21                                           |
-| ph1_life |                                       |           |                                                           |
-| ph2_life |                                       |           |                                                           |
-| dpd      |                                       |           |                                                           |
+| prem_net | Subnet the client has on their equipment | IP Subnet | Policy Based example 10.0.0.0/16 / Route based 0.0.0.0/0   |
+| ike_ver  | Which protocol version                | INT       | 2                                                          |
+| encry    | The cipher suite to use               | List      | 3des, blowfish128 192 256 , aes128 192 256                 |
+| integ    | Authentication Hash                   | List      | md5 , sha1 , sha256 , sha384                               |
+| dhg      |                                       | List      | 2,5,14,19,20,21                                            |
+| ph1_life |                                       |           |                                                            |
+| ph2_life |                                       |           |                                                            |
+| dpd      |                                       |           |                                                            |

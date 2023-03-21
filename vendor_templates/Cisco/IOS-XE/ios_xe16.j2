@@ -1,40 +1,56 @@
-{# Define Phase 1 Config #}
- crypto keyring {{keyring}}
-  pre-shared-key address {{p81_ip}} key {{psk}}
-
+{# IKEv2 Route Based IPSEC VPN #}
 crypto isakmp policy 10
- encr aes 256
- hash sha256
+ encryption aes 256
  authentication pre-share
+ group 14
+
+
+{# Ph1 Key #}
+crypto isakmp key {{ psk }} address {{ p81_ip }}
+
+{# Ph2 Key #}
+crypto ikev2 keyring p81-keyring
+  peer {{ p81_gw }}
+  description Perimeter81
+  address {{ p81_ip }}
+  pre-shared-key local passw0rd1
+  pre-shared-key remote passw0rd1
+
+
+{# Phase 2 Proposal #}
+crypto ipsec transform-set {{transform_set_name}} esp-{{ encry }} esp-{{ integ }}-hmac
+ mode tunnel
+
+{# Phase 1 Profile #}
+crypto ikev2 profile {{ phase1 }}-profile
+match identity remote address {{ p81_ip }} 255.255.255.255
+authentication local pre-share
+authentication remote pre-share
+keyring local {{ keyring }}
+
+
+{# Phase 1 Proposals #}
+crypto ikev2 proposal {{ phase1 }}-proposal
+ encryption {{ encry }}
+ integrity {{ integ }}
  group {{ dhg }}
- lifetime 28800
 
-{# Define Phase 1 Profile #}
-crypto isakmp profile {{phase1}}
-   keyring {{keyring}}
-   match identity address {{ p81_ip }} 255.255.255.255
-   local-address {{ prem_ip }}
-
-{# Define Phase 2 Policy #}
-crypto ipsec transform-set {{transform_set_name}} esp-{{encry}} esp-sha-hmac
-
-{# Define Phase 2 Profile #}
-crypto ipsec profile {{phase2}}
+{# Phase 2 Profile #}
+crypto ipsec profile {{ phase2 }}-profile
  set transform-set {{transform_set_name}}
- set security-association lifetime {{ph2_life}}
- set pfs group14
- set isakmp-profile {{phase1}}
+ set ikev2-profile {{phase1}}-profile
+
 
 {# Interface Config #}
 interface {{tunnel_int}}
- ip address {{prem_bgp_ip}} 255.255.255.252
+ ip address 172.17.200.10 255.255.255.0 <--- replace with address from range
  ip mtu 1400
  ip nat inside
  ip tcp adjust-mss 1360
- tunnel source {{prem_ip}}
+ tunnel source GigabitEthernet1 <--- replace with source interface
  tunnel mode ipsec ipv4
  tunnel destination {{p81_ip}}
- tunnel protection ipsec profile {{phase2}}
+ tunnel protection ipsec profile {{phase2}}-profile
 
 {# Routes #}
 ip route {{ p81_net }} {{tunnel_int}}

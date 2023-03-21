@@ -1,7 +1,7 @@
 #Properties of Premise Device Config
-hostname: "cisco_iosxe"
-prem_ip: "54.86.139.255"
-prem_net: "172.17.100.0/24"
+hostname: "ios_xe2"
+prem_ip: "54.87.145.116"
+prem_net: "172.27.100.0/24"
 
 #Properties of Perimeter81 Config
 p81_gw: "Perimeter81"
@@ -10,14 +10,12 @@ p81_net: "10.130.0.0 255.255.0.0"
 
 #Shared VPN Properties
 phase1: "p81-ikev2-ph1"
-ph1_encry: "aes-cbc-256"
-
 phase2: "p81-ipsec-ph2"
 psk: "passw0rd1"
 # IKEV Version 1 or 2
 ike_ver: "ikev2"
-encry: "aes 256"
-integ: "sha256"
+encry: "esp-256-aes"
+integ: "esp-sha256-hmac"
 dhg: "14"
 ph1_life: "8"
 ph2_life: "28800"
@@ -40,7 +38,3 @@ route_map_in: "VPN-1-NONE-IN"
 route_map_out: "VPN-1-NONE-OUT"
 local_lo: "Loopback81"
 tunnel_int: "tunnel 101"
-
-
-
-
