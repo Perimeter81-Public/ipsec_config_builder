@@ -1,5 +1,5 @@
 Configuration Samples for Perimeter81 Internal to various other vendor devices 
-# config-snippets
+# ipsec_config_builder
 This is a configuration repository to help build ipsec & bgp configuration with common firewall & device platforms 
 
 The configuration is for route based VPN solutions 
