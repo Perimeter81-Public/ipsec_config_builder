@@ -28,4 +28,5 @@ def render_cfg():
         print(leaf_config)
 
 if __name__ == '__main__':
+    input()
     render_cfg()
