@@ -1,35 +1,54 @@
 # Louis DeVictoria
-# Script to accept device variables input to create a file to be used in configuration
-import sys
-import pprint
-import yaml
-from validation import net_checks
+# Script to build the variables file
 
-# Present / Gather info from user
-# Wrap data into dictionary
-# Convert Dictonary to YAML file for vars
-# kick off render script
+import click
+import yaml
 
 ipsec_params = {}
 
-encrypt_list = ["3des", "blowfish128", "blowfish192", "blowfish256", "aes128", "aes192", "aes256"]
-integrity_list = ["md5", "sha1", "sha256", "sha384"]
+@click.group()
+def cli():
+    pass
 
-ipsec_params['vendor'] = input("Enter Vendor: cisco , palo , fortinet , mikrotik: ")
-ipsec_params['hostname'] = input("Enter the hostname: ")
-ipsec_params['prem_ip'] = input("Enter Premise Public IP: ")
-ipsec_params['prem_net'] = input("Enter the Premise Subnet: ")
-ipsec_params['p81_gw'] = input("Name of the VPN: ex: Perimeter81: ")
-ipsec_params['p81_ip'] = input("Public IP of Gateway: ")
-ipsec_params['p81_net'] = input("Enter the P81 VPN Subnet: ")
-ipsec_params['psk'] = input("Enter the PreShare Key: ")
-ipsec_params['encry'] = input("[3des, blowfish128, blowfish192, blowfish256,aes128,aes192, aes256: ")
-ipsec_params['integ'] = input("Select Integrity:  [md5 , sha1 , sha256 , sha384]: ")
-ipsec_params['dhg'] = input("Select Diffie-Helllman Group: [2,5,14,19,20,21]: ")
-ipsec_params['ph1_life'] = input("Enter the Phase 1 lifetime in hours: ")
-ipsec_params['ph2_life'] = input("Enter the Phase 2 lifetime in hours: ")
-pprint.pprint(ipsec_params)
+@click.command()
+@click.option("--vendor", prompt=True, type=click.Choice(['cisco' , 'palo' , 'fortinet' , 'mikrotik'], case_sensitive=False,))
+@click.option("--prem_ip", prompt="Premise IP Address", help="The person to greet.")
+@click.option("--prem_net", prompt="Premise Subnet", help="The person to greet.")
+@click.option("--p81_gw", prompt="VPN Name", help="The person to greet.")
+@click.option("--p81_ip", prompt="Gateway IP", help="The person to greet.")
+@click.option("--p81_net", prompt="P81 Subnet", help="The person to greet.")
+@click.option("--psk", prompt="Preshare Key", help="The person to greet.")
+@click.option("--encry",prompt=True, type=click.Choice(["3des", "blowfish128", "blowfish192", "blowfish256", "aes128", "aes192", "aes256"], case_sensitive=False, ))
+@click.option("--integ",prompt=True, type=click.Choice(['MD5', 'SHA1'], case_sensitive=False, ))
+@click.option("--dhg",prompt=True, type=click.Choice(['2','5','14','19','20','21'], case_sensitive=False, ))
+@click.option("--ph1_life", prompt="Phase 1 Lifetime", required=True, type=int)
+@click.option("--ph2_life", prompt="Phase 2 Lifetime", required=True, type=int)
+def collect(vendor,prem_ip,prem_net,p81_gw,p81_ip,p81_net,psk,encry,integ,dhg,ph1_life,ph2_life):
+    ipsec_params['vendor'] = vendor
+    ipsec_params['prem_ip'] = prem_ip
+    ipsec_params['prem_net'] = prem_net
+    ipsec_params['p81_gw'] = p81_gw
+    ipsec_params['p81_ip'] = p81_ip
+    ipsec_params['p81_net'] = p81_net
+    ipsec_params['psk'] = psk
+    ipsec_params['encry'] = encry
+    ipsec_params['integ'] = integ
+    ipsec_params['dhg'] = dhg
+    ipsec_params['ph1_life'] = ph1_life
+    ipsec_params['ph2_life'] = ph2_life
+    print(ipsec_params)
+    with open(f'{vendor}.yml',"w+") as file:
+        yaml.dump(ipsec_params,file,sort_keys=False)
+    return ipsec_params
 
-hostname = ipsec_params['hostname']
-with open(f'{hostname}.yml',"w+") as file:
-	yaml.dump(ipsec_params,file,sort_keys=False)
+
+
+#def hello(count, vendor):
+#    """Simple program that greets NAME for a total of COUNT times."""
+#    for _ in range(count):
+#        click.echo(f"You Selected, {vendor}!")
+
+
+
+if __name__ == '__main__':
+    collect()
