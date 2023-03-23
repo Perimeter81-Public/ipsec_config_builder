@@ -1,12 +1,20 @@
-### Find a cli command 
-`find command keyword `
+## Palo Alto 
+
+### Active VPN Information 
+
+#### Get IPSEC Phase 1 info
+- `show vpn gateway`
+
+- `show vpn tunnel `
+
+#### Phase 2 Info
+- `show vpn ipsec-sa` 
+
 ### Device System Info
 `show deviceconfig system service`
-### Show ipsec-sa 
-`show vpn ipsec-sa `
-### Show vpn tunnels 
-`show vpn tunnel `
-### show vpn gateways 
-`show vpn gateway`
+
 ### show bgp peers 
 `show routing protocol bgp peer`
+
+### Find a cli command 
+`find command keyword `
