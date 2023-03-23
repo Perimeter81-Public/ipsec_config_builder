@@ -15,8 +15,6 @@ ipsec_params = {}
 encrypt_list = ["3des", "blowfish128", "blowfish192", "blowfish256", "aes128", "aes192", "aes256"]
 integrity_list = ["md5", "sha1", "sha256", "sha384"]
 
-
-
 ipsec_params['vendor'] = input("Enter Vendor: cisco , palo , fortinet , mikrotik: ")
 ipsec_params['hostname'] = input("Enter the hostname: ")
 ipsec_params['prem_ip'] = input("Enter Premise Public IP: ")
@@ -31,8 +29,6 @@ ipsec_params['dhg'] = input("Select Diffie-Helllman Group: [2,5,14,19,20,21]: ")
 ipsec_params['ph1_life'] = input("Enter the Phase 1 lifetime in hours: ")
 ipsec_params['ph2_life'] = input("Enter the Phase 2 lifetime in hours: ")
 pprint.pprint(ipsec_params)
-
-
 
 hostname = ipsec_params['hostname']
 with open(f'{hostname}.yml',"w+") as file:
