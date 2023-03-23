@@ -43,5 +43,5 @@ add action=accept chain=forward src-address-list=VPN
 add action=accept chain=srcnat dst-address-list=VPN src-address-list=VPN
 
 {% if bgp is defined %}
- {% include "vendor_templates/mikrotik/v6.48/_routeros648_bgp.j2" %}
+ {% include "vendor_templates/mikrotik/routeros6/_routeros648_bgp.j2" %}
 {% endif %}

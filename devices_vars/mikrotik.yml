@@ -1,5 +1,5 @@
 #Properties of Premise Device Config
-hostname: "routerosfw2"
+hostname: "mikrotik"
 prem_ip: "35.172.43.104"
 prem_net: "172.17.100.0/24"
 

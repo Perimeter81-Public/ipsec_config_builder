@@ -1,0 +1,123 @@
+### Create tunnel interface
+set network interface tunnel units tunnel.1
+
+### Create IKE Profile
+set network ike crypto-profiles ike-crypto-profiles Phase1 hash aes-256
+set network ike crypto-profiles ike-crypto-profiles Phase1 dh-group group14
+set network ike crypto-profiles ike-crypto-profiles Phase1 encryption [ aes-256-cbc aes-256-gcm ]
+set network ike crypto-profiles ike-crypto-profiles Phase1 lifetime hours 8
+
+### Create IPSEC Profile
+set network ike crypto-profiles ipsec-crypto-profiles Phase2 esp authentication aes-256
+set network ike crypto-profiles ipsec-crypto-profiles Phase2 esp encryption [ aes-256-cbc aes-256-gcm ]
+set network ike crypto-profiles ipsec-crypto-profiles Phase2 lifetime hours 1
+set network ike crypto-profiles ipsec-crypto-profiles Phase2 dh-group group14
+
+### Create IPSEC Peer
+set network ike gateway Perimeter81 authentication pre-shared-key passw0rd1
+set network ike gateway Perimeter81 protocol ikev2 dpd enable yes
+set network ike gateway Perimeter81 protocol ikev2 dpd interval 10
+set network ike gateway Perimeter81 protocol ikev2 ike-crypto-profile
+set network ike gateway Perimeter81 protocol version ikev2
+set network ike gateway Perimeter81 protocol-common nat-traversal enable yes
+set network ike gateway Perimeter81 protocol-common fragmentation enable no
+set network ike gateway Perimeter81 local-address interface <public intf>
+set network ike gateway Perimeter81 local-address ip 54.144.171.95
+set network ike gateway Perimeter81 peer-address ip 131.226.32.161
+set network ike gateway Perimeter81 local-id id 54.144.171.95
+set network ike gateway Perimeter81 local-id type ipaddr
+set network ike gateway Perimeter81 peer-id id 131.226.32.161
+set network ike gateway Perimeter81 peer-id type ipaddr
+
+### Create IPSEC Tunnel Config
+set network tunnel ipsec Perimeter81 auto-key ipsec-crypto-profile Phase2
+set network tunnel ipsec Perimeter81 auto-key proxy-id Proxy1 protocol any
+set network tunnel ipsec Perimeter81 auto-key proxy-id Proxy1 local 172.19.100.0/24
+set network tunnel ipsec Perimeter81 auto-key proxy-id Proxy1 remote 10.130.0.0/16
+set network tunnel ipsec Perimeter81 tunnel-monitor enable no
+set network tunnel ipsec Perimeter81 tunnel-interface tunnel.1
+set network tunnel ipsec Perimeter81 disabled no
+
+
+### Set Rules to allow access
+set rulebase security rules "All IPSEC" to any
+set rulebase security rules "All IPSEC" from any
+set rulebase security rules "All IPSEC" source any
+set rulebase security rules "All IPSEC" destination any
+set rulebase security rules "All IPSEC" source-user any
+set rulebase security rules "All IPSEC" category any
+set rulebase security rules "All IPSEC" application [ ike ipsec ]
+set rulebase security rules "All IPSEC" service application-default
+set rulebase security rules "All IPSEC" source-hip any
+set rulebase security rules "All IPSEC" destination-hip any
+set rulebase security rules "All IPSEC" action allow
+set rulebase security rules INTERNAL-LANS to any
+set rulebase security rules INTERNAL-LANS from any
+set rulebase security rules INTERNAL-LANS source 172.19.100.0/24
+set rulebase security rules INTERNAL-LANS destination 10.130.0.0/16
+set rulebase security rules INTERNAL-LANS source-user any
+set rulebase security rules INTERNAL-LANS category any
+set rulebase security rules INTERNAL-LANS application any
+set rulebase security rules INTERNAL-LANS service any
+set rulebase security rules INTERNAL-LANS source-hip any
+set rulebase security rules INTERNAL-LANS destination-hip any
+set rulebase security rules INTERNAL-LANS action allow
+
+
+ set network tunnel ipsec Perimeter81 auto-key proxy-id Proxy4 protocol any
+set network tunnel ipsec Perimeter81 auto-key proxy-id Proxy4 local 169.254.100.2
+set network tunnel ipsec Perimeter81 auto-key proxy-id Proxy4 remote 169.254.100.1
+
+set network virtual-router default routing-table ip static-route "Tunnel BGP" path-monitor enable no
+set network virtual-router default routing-table ip static-route "Tunnel BGP" path-monitor failure-condition any
+set network virtual-router default routing-table ip static-route "Tunnel BGP" path-monitor hold-time 2
+set network virtual-router default routing-table ip static-route "Tunnel BGP" bfd profile None
+set network virtual-router default routing-table ip static-route "Tunnel BGP" interface tunnel.1
+set network virtual-router default routing-table ip static-route "Tunnel BGP" metric 10
+set network virtual-router default routing-table ip static-route "Tunnel BGP" destination 169.254.100.1/32
+set network virtual-router default routing-table ip static-route "Tunnel BGP" route-table unicast
+
+
+set network virtual-router default protocol bgp enable yes
+set network virtual-router default protocol bgp dampening-profile default cutoff 1.25
+set network virtual-router default protocol bgp dampening-profile default reuse 0.5
+set network virtual-router default protocol bgp dampening-profile default max-hold-time 900
+set network virtual-router default protocol bgp dampening-profile default decay-half-life-reachable 300
+set network virtual-router default protocol bgp dampening-profile default decay-half-life-unreachable 900
+set network virtual-router default protocol bgp dampening-profile default enable yes
+set network virtual-router default protocol bgp routing-options graceful-restart enable yes
+set network virtual-router default protocol bgp peer-group P81 type ebgp remove-private-as no
+set network virtual-router default protocol bgp peer-group P81 type ebgp import-nexthop original
+set network virtual-router default protocol bgp peer-group P81 type ebgp export-nexthop resolve
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY peer-address ip 169.254.100.1
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY connection-options incoming-bgp-connection remote-port 0
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY connection-options incoming-bgp-connection allow yes
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY connection-options outgoing-bgp-connection local-port 0
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY connection-options outgoing-bgp-connection allow yes
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY connection-options multihop 0
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY connection-options keep-alive-interval 30
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY connection-options open-delay-time 0
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY connection-options hold-time 90
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY connection-options idle-hold-time 15
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY connection-options min-route-adv-interval 30
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY subsequent-address-family-identifier unicast yes
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY subsequent-address-family-identifier multicast no
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY local-address ip 169.254.100.2
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY local-address interface loopback.1
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY bfd profile Inherit-vr-global-setting
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY max-prefixes 5000
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY enable yes
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY peer-as 64512
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY enable-mp-bgp no
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY address-family-identifier ipv4
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY enable-sender-side-loop-detection yes
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY reflector-client non-client
+set network virtual-router default protocol bgp peer-group P81 peer P81_NY peering-type unspecified
+set network virtual-router default protocol bgp peer-group P81 aggregated-confed-as-path yes
+set network virtual-router default protocol bgp peer-group P81 soft-reset-with-stored-info no
+set network virtual-router default protocol bgp peer-group P81 enable yes
+set network virtual-router default protocol bgp router-id 169.254.100.2
+set network virtual-router default protocol bgp local-as 64550
+
+
+
