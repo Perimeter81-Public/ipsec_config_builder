@@ -11,13 +11,13 @@ config vpn ipsec phase1-interface
         set comments "Phase 1 Config for Perimeter81"
         set dhgrp {{dhg}}
         set remote-gw {{p81_ip}}
-        set psksecret ENC {{psk}}
+        set psksecret {{psk}}
         set dpd-retrycount {{dpd}}
         set dpd-retryinterval 30
     next
 end
 
-{# Phase 2 Configuration # }
+{# Phase 2 Configuration #}
 config vpn ipsec phase2-interface
     edit "{{p81_gw}}"
         set phase1name "{{p81_gw}}"

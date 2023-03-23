@@ -31,7 +31,7 @@ end
 
 
 config router static
-    edit X
+    edit 1
         set dst 10.130.0.0 255.255.0.0
         set device "Perimeter81"
     next

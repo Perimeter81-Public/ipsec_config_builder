@@ -75,3 +75,12 @@ Returns all configuration relative to ipsec
 - debug crypto ikev2 
 
 - debug crypto ipsec
+
+### Network Troubleshooting Commands
+#### Ping
+ping 10.130.0.1
+#### Traceroute
+traceroute 10.130.0.1
+```commandline
+
+```

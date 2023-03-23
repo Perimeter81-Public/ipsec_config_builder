@@ -1,6 +1,6 @@
 #Properties of Premise Device Config
-hostname: "fortinet_p81"
-prem_ip: "54.88.191.104"
+hostname: "fort_p81"
+prem_ip: "34.228.8.119"
 prem_net: "172.17.100.0 255.255.255.0"
 
 #Properties of Perimeter81 Config
@@ -15,7 +15,7 @@ psk: "passw0rd1"
 # IKEV Version 1 or 2
 ike_ver: "2"
 encry: "aes-256"
-integ: "aes-256"
+integ: "sha256"
 dhg: "14"
 ph1_life: "8"
 ph2_life: "1"
