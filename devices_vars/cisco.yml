@@ -1,6 +1,6 @@
 #Properties of Premise Device Config
-hostname: "cisco_iosxe"
-prem_ip: "54.86.139.255"
+hostname: "cisco_iosxe2"
+prem_ip: "44.206.0.247"
 prem_net: "172.17.100.0/24"
 
 #Properties of Perimeter81 Config

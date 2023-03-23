@@ -1,16 +1,16 @@
 #Louis DeVictoria
 #Python Script to load the dictionary file and jinja2 template to create a configuration
 
-from jinja2 import Environment, FileSystemLoader , StrictUndefined
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
 #Local Directory
-file_loader = FileSystemLoader('..')
+file_loader = FileSystemLoader('')
 #Load Environment
 env = Environment(loader=file_loader)
 import yaml
-template = env.get_template('./vendor_templates/fortinet/fortios_6/fortios_v6_4.j2')
+template = env.get_template('./vendor_templates/cisco/iosxe_17/iosxe_17.j2')
 
 def render_cfg():
-    with open('../devices_vars/palo_fw.yml') as info2:
+    with open('./devices_vars/ios_xe2.yml') as info2:
         device_dict = yaml.load(info2, Loader=yaml.FullLoader)
         #Opens the host device dictionary and pulls the values
         hostname = (device_dict['hostname'])
@@ -28,5 +28,4 @@ def render_cfg():
         print(leaf_config)
 
 if __name__ == '__main__':
-    input()
     render_cfg()
