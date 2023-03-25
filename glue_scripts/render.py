@@ -1,5 +1,6 @@
 #Louis DeVictoria
 #Python Script to load the dictionary file and jinja2 template to create a configuration
+import sys
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 #Local Directory
@@ -7,10 +8,10 @@ file_loader = FileSystemLoader('')
 #Load Environment
 env = Environment(loader=file_loader)
 import yaml
-template = env.get_template('./vendor_templates/mikrotik/routeros6/_routeros648.j2')
+template = env.get_template('/vendor_templates/cisco/iosxe_17/iosxe_17.j2')
 
-def render_cfg():
-    with open('./devices_vars/mikrotik.yml') as info2:
+def render_cfg(file):
+    with open(f'./devices_vars/{file}') as info2:
         device_dict = yaml.load(info2, Loader=yaml.FullLoader)
         #Opens the host device dictionary and pulls the values
         hostname = (device_dict['hostname'])
@@ -28,4 +29,5 @@ def render_cfg():
         print(leaf_config)
 
 if __name__ == '__main__':
-    render_cfg()
+    file = sys.argv[1]
+    render_cfg(file)
