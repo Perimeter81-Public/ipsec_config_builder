@@ -8,7 +8,7 @@ file_loader = FileSystemLoader('')
 #Load Environment
 env = Environment(loader=file_loader)
 import yaml
-template = env.get_template('/vendor_templates/cisco/iosxe_17/iosxe_17.j2')
+template = env.get_template('/vendor_templates/cisco/iosxe_17/iosxe.j2')
 
 def render_cfg(file):
     with open(f'./devices_vars/{file}') as info2:
