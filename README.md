@@ -1,3 +1,5 @@
+![img_1.png](img_1.png)
+
 Configuration Samples for Perimeter81 Internal to various other vendor devices 
 # ipsec config builder
 This is a configuration repository to help build ipsec & bgp configuration for common firewall & device platforms 
@@ -13,7 +15,10 @@ questions and ensure compliance to complete builds with needed variables, genera
 python3 vars_builder.py
 ```
 This will allow users to reenter incorerect values with a helpful prompt. 
-![img_1.png](img_1.png)
+
+![img_2.png](img_2.png)
+
+This will create a file under `device_vars` and `sample_config` after completing the questions. 
 ### vendor_templates 
 is the directory of all the vendors. each subdirectory refernces 
 the platform and contains one file to build a base ipsec tunnel with generic firewall permission. There is
