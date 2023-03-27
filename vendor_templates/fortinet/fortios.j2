@@ -1,3 +1,12 @@
+{# define a list of tunnels #}
+set tunnels= [
+    {
+      'tunnelname':'{{p81_gw}}',
+      'remote_IP':'{{p81_ip}}',
+      'network_id':'1',
+      'interface':'port1'
+    }
+
 {# Phase 1 Configuration  #}
 config vpn ipsec phase1-interface
     edit "{{p81_gw}}"
