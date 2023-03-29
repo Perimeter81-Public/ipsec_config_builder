@@ -9,17 +9,36 @@ import subprocess
 
 ipsec_params = {}
 
+# Function to validate IP Address
+def isip(ctx, param, address):
+    try:
+        if ipaddress.ip_address(address).is_global == True:
+            return address
+        else:
+            raise click.BadParameter("IP Must be Public")
+    except ValueError:
+        raise click.BadParameter("Re-enter IPv4 Address ex 1.1.1.1 ")
+
+#Function to validate ip prefix
+def isnet(ctx, param , prefix):
+    try:
+        if ipaddress.IPv4Network(prefix) != True:
+            return prefix
+        else:
+            raise click.BadParameter(f"Enter a valid subnet ex 10.0.0.0/24 {prefix}")
+    except ValueError:
+        raise click.BadParameter("Enter a valid subnet ex 10.0.0.0/24 ")
 @click.group()
 def cli():
     pass
 
 @click.command()
 @click.option("--vendor", prompt=True, type=click.Choice(['cisco' , 'paloalto' , 'fortinet' , 'mikrotik'], case_sensitive=False,))
-@click.option("--prem_ip", prompt="Premise IP Address", help="The person to greet.")
-@click.option("--prem_net", prompt="Premise Subnet", help="The person to greet.")
+@click.option("--prem_ip", prompt="Premise IP Address", callback=isip, help="Public IP Client Side.")
+@click.option("--prem_net", prompt="Premise Subnet", callback=isnet, type=str )
 @click.option("--p81_gw", prompt="VPN Name", help="The person to greet.")
-@click.option("--p81_ip", prompt="Gateway IP", help="The person to greet.")
-@click.option("--p81_net", prompt="P81 Subnet", help="The person to greet.")
+@click.option("--p81_ip", prompt="Gateway IP", callback=isip, help="P81 Gateway IP.")
+@click.option("--p81_net", prompt="P81 Subnet", callback=isnet, type=str )
 @click.option("--psk", prompt="Preshare Key", help="The person to greet.")
 @click.option("--encry",prompt=True, type=click.Choice(["3des", "blowfish128", "blowfish192", "blowfish256", "aes128", "aes192", "aes256"], case_sensitive=False, ))
 @click.option("--integ",prompt=True, type=click.Choice(['md5', 'sha1', 'sha256', 'sha384'], case_sensitive=False, ))
