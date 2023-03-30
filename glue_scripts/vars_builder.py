@@ -5,14 +5,14 @@ import click
 import yaml
 from render import render_cfg
 import time
-import subprocess
+import ipaddress
 
 ipsec_params = {}
 
 # Function to validate IP Address
 def isip(ctx, param, address):
     try:
-        if ipaddress.ip_address(address).is_global == True:
+        if ipaddress.ip_address(address).is_global:
             return address
         else:
             raise click.BadParameter("IP Must be Public")
@@ -36,16 +36,16 @@ def cli():
 @click.option("--vendor", prompt=True, type=click.Choice(['cisco' , 'paloalto' , 'fortinet' , 'mikrotik'], case_sensitive=False,))
 @click.option("--prem_ip", prompt="Premise IP Address", callback=isip, help="Public IP Client Side.")
 @click.option("--prem_net", prompt="Premise Subnet", callback=isnet, type=str )
-@click.option("--p81_gw", prompt="VPN Name", help="The person to greet.")
+@click.option("--p81_gw", prompt="VPN Name", default="Perimeter81", help="Name for the IKE GW.")
 @click.option("--p81_ip", prompt="Gateway IP", callback=isip, help="P81 Gateway IP.")
-@click.option("--p81_net", prompt="P81 Subnet", callback=isnet, type=str )
+@click.option("--p81_net", prompt="P81 Subnet", default="10.255.0.0/16", callback=isnet, type=str )
 @click.option("--psk", prompt="Preshare Key", help="The person to greet.")
-@click.option("--encry",prompt=True, type=click.Choice(["3des", "blowfish128", "blowfish192", "blowfish256", "aes128", "aes192", "aes256"], case_sensitive=False, ))
-@click.option("--integ",prompt=True, type=click.Choice(['md5', 'sha1', 'sha256', 'sha384'], case_sensitive=False, ))
-@click.option("--dhg",prompt=True, type=click.Choice(['2','5','14','19','20','21'], case_sensitive=False, ))
-@click.option("--ph1_life", prompt="Phase 1 Lifetime", required=True, type=int)
-@click.option("--ph2_life", prompt="Phase 2 Lifetime", required=True, type=int)
-@click.option("--dpd", prompt="Dead Peer Timer: ", required=True, type=int)
+@click.option("--encry",prompt=True, default="aes256", type=click.Choice(["3des", "blowfish128", "blowfish192", "blowfish256", "aes128", "aes192", "aes256"],  case_sensitive=False,))
+@click.option("--integ",prompt=True, default="sha256", type=click.Choice(['md5', 'sha1', 'sha256', 'sha384'], case_sensitive=False, ))
+@click.option("--dhg",prompt=True, default="14", type=click.Choice(['2','5','14','19','20','21'], case_sensitive=False, ))
+@click.option("--ph1_life", prompt="Phase 1 Lifetime",default=8, required=True, type=int)
+@click.option("--ph2_life", prompt="Phase 2 Lifetime",default=1, required=True, type=int)
+@click.option("--dpd", prompt="Dead Peer Timer: ",default=10, required=True, type=int)
 def collect(vendor,prem_ip,prem_net,p81_gw,p81_ip,p81_net,psk,encry,integ,dhg,ph1_life,ph2_life,dpd):
     ipsec_params['vendor'] = vendor
     ipsec_params['prem_ip'] = prem_ip
@@ -67,12 +67,6 @@ def collect(vendor,prem_ip,prem_net,p81_gw,p81_ip,p81_net,psk,encry,integ,dhg,ph
     time.sleep(5)
     render_cfg(vendor)
     return ipsec_params
-
-
-
-
-
-
 
 
 if __name__ == '__main__':

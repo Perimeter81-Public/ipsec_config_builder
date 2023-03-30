@@ -2,23 +2,23 @@
 
 #Define the ISAKMP Encryption Algorithms and Name a Proposal
 /ip ipsec proposal
-add auth-algorithms=sha256 enc-algorithms=aes-256-cbc,aes-256-ctr,aes-256-gcm name=Perimeter81-Proposal pfs-group=modp2048
+add auth-algorithms=sha256 enc-algorithms=aes256-cbc,aes256-ctr,aes256-gcm name=Perimeter81-Proposal pfs-group=14
 
 #Define the IPSEC Encryption Algorithms and Name a Profile
 /ip ipsec profile
-add dh-group=modp2048 dpd-interval=10s enc-algorithm=aes-256 hash-algorithm=sha256 name=Perimeter81
+add dh-group=14 dpd-interval=10s enc-algorithm=aes256 hash-algorithm=sha256 name=Perimeter81
 
 #Define the Peer and ISKAKMP Mode
 /ip ipsec peer
-add address=131.226.32.161 exchange-mode=ikev2 local-address=35.172.43.104 name=Perimeter81 profile=Perimeter81
+add address=2.2.2.2 exchange-mode= local-address=1.1.1.1 name=Perimeter81 profile=Perimeter81
 
 #Defind the Identity and Pre Share Key
 /ip ipsec identity
-add my-id=address:35.172.43.104 peer=Perimeter81 secret=passw0rd1
+add my-id=address:1.1.1.1 peer=Perimeter81 secret=PRESHARE
 
 #Create the Interesting Traffic Profile
 /ip ipsec policy
-add dst-address=0.0.0.0/0 peer=Perimeter81 proposal=Perimeter81-Proposal sa-dst-address=131.226.32.161 sa-src-address=35.172.43.104 src-address=0.0.0.0/0 tunnel=yes
+add dst-address=0.0.0.0/0 peer=Perimeter81 proposal=Perimeter81-Proposal sa-dst-address=2.2.2.2 sa-src-address=1.1.1.1 src-address=0.0.0.0/0 tunnel=yes
 
 #Ensure the Firewall Permits the Access
 /ip firewall address-list
@@ -26,9 +26,9 @@ add dst-address=0.0.0.0/0 peer=Perimeter81 proposal=Perimeter81-Proposal sa-dst-
 
 # Create Address Lists to Use in Policy
 /ip firewall address-list
-add address=131.226.32.161 list=IPSECPEER
-add address=172.17.100.0/24 list=VPN
-add address=10.130.0.0/16 list=VPN
+add address=2.2.2.2 list=IPSECPEER
+add address=10.0.0.0/24 list=VPN
+add address=10.255.0.0/16 list=VPN
 
 #Create Firewall access for IPSEC
 /ip firewall filter
@@ -42,21 +42,3 @@ add action=accept chain=forward src-address-list=VPN
 /ip firewall nat
 add action=accept chain=srcnat dst-address-list=VPN src-address-list=VPN
 
-
- ### Add Loopback Interface for Peering
-/interface bridge
-add name=lo0
-
-## BGP Config
-/routing bgp instance
-set default as=64550 client-to-client-reflection=yes !cluster-id !confederation disabled=no ignore-as-path-len=no name=default \
-    out-filter="" redistribute-connected=yes redistribute-ospf=no redistribute-other-bgp=no redistribute-rip=no redistribute-static=\
-    no router-id=169.254.100.2 routing-table=""
-/routing bgp network
-add disabled=no network=172.17.100.0/24 synchronize=yes
-/routing bgp peer
-add address-families=ip !allow-as-in as-override=no default-originate=never disabled=no hold-time=3m in-filter="" instance=default \
-    !keepalive-time !max-prefix-limit !max-prefix-restart-time multihop=no name=VPN nexthop-choice=default out-filter="" passive=no \
-    remote-address=169.254.100.1 remote-as=64512 remove-private-as=no route-reflect=no tcp-md5-key="" ttl=255 update-source=lo0 \
-    use-bfd=no
-add name=VPN remote-address=169.254.100.1 update-source=lo0

@@ -1,19 +1,39 @@
 
+set tunnels= [
+    {
+      'tunnelname':'Perimeter81',
+      'remote_IP':'2.2.2.2',
+      'network_id':'1',
+      'interface':'port1'
+    }
+
+
 config vpn ipsec phase1-interface
     edit "Perimeter81"
         set interface "port1"
-        set ike-version 2
+        set ike-version 
         set peertype any
         set net-device disable
         set mode-cfg enable
-        set proposal aes-256-aes-256
+        set proposal aes256-sha256
         set dpd on-idle
         set comments "Phase 1 Config for Perimeter81"
         set dhgrp 14
-        set remote-gw 131.226.32.161
-        set psksecret ENC passw0rd1
+        set remote-gw 2.2.2.2
+        set psksecret PRESHARE
         set dpd-retrycount 10
         set dpd-retryinterval 30
+    next
+end
+
+
+config vpn ipsec phase2-interface
+    edit "Perimeter81"
+        set phase1name "Perimeter81"
+        set proposal aes256-sha256
+        set dhgrp 14
+        set auto-negotiate enable
+        set comments "Phase 2 Config for Perimeter81"
     next
 end
 
@@ -31,8 +51,8 @@ end
 
 
 config router static
-    edit 1
-        set dst 10.130.0.0 255.255.0.0
+    edit X
+        set dst 10.255.0.0/16
         set device "Perimeter81"
     next
 end

@@ -1,41 +1,13 @@
-#Properties of Premise Device Config
-hostname: "fort_p81"
-prem_ip: "34.228.8.119"
-prem_net: "172.17.100.0 255.255.255.0"
-
-#Properties of Perimeter81 Config
-p81_gw: "Perimeter81"
-p81_ip: "131.226.32.161"
-p81_net: "10.130.0.0 255.255.0.0"
-
-#Shared VPN Properties
-phase1: "Phase1"
-phase2: "Phase2"
-psk: "passw0rd1"
-# IKEV Version 1 or 2
-ike_ver: "2"
-encry: "aes-256"
-integ: "sha256"
-dhg: "14"
-ph1_life: "8"
-ph2_life: "1"
-dpd: "10"
-
-#BGP Config , Uncomment BGP Below to execute
-#bgp:
-# Premise BGP
-prem_asn: "64550"
-prem_bgp_ip: "169.254.100.2"
-
-# P81 BGP Config
-p81_asn: "64512"
-p81_bgp_ip: "169.254.100.1"
-
-# Unique Vendors vars
-prem_bgp_peer_grp: "P81"
-prem_bgp_peer: "P81_NY"
-
-
-
-
-
+vendor: fortinet
+prem_ip: 1.1.1.1
+prem_net: 10.0.0.0/24
+p81_gw: Perimeter81
+p81_ip: 2.2.2.2
+p81_net: 10.255.0.0/16
+psk: PRESHARE
+encry: aes256
+integ: sha256
+dhg: '14'
+ph1_life: 8
+ph2_life: 1
+dpd: 10
