@@ -14,29 +14,29 @@ set network ike crypto-profiles ipsec-crypto-profiles  lifetime hours 1
 set network ike crypto-profiles ipsec-crypto-profiles  dh-group 14
 
 ### Create IPSEC Peer
-set network ike gateway P81 authentication pre-shared-key PRE
-set network ike gateway P81 protocol ikev2 dpd enable yes
-set network ike gateway P81 protocol ikev2 dpd interval 30
-set network ike gateway P81 protocol ikev2 ike-crypto-profile
-set network ike gateway P81 protocol version 
-set network ike gateway P81 protocol-common nat-traversal enable yes
-set network ike gateway P81 protocol-common fragmentation enable no
-set network ike gateway P81 local-address interface <public intf>
-set network ike gateway P81 local-address ip 1.1.1.1
-set network ike gateway P81 peer-address ip 2.2.2.2
-set network ike gateway P81 local-id id 1.1.1.1
-set network ike gateway P81 local-id type ipaddr
-set network ike gateway P81 peer-id id 2.2.2.2
-set network ike gateway P81 peer-id type ipaddr
+set network ike gateway Perimeter81 authentication pre-shared-key PRESHARE
+set network ike gateway Perimeter81 protocol ikev2 dpd enable yes
+set network ike gateway Perimeter81 protocol ikev2 dpd interval 10
+set network ike gateway Perimeter81 protocol ikev2 ike-crypto-profile
+set network ike gateway Perimeter81 protocol version 
+set network ike gateway Perimeter81 protocol-common nat-traversal enable yes
+set network ike gateway Perimeter81 protocol-common fragmentation enable no
+set network ike gateway Perimeter81 local-address interface <public intf>
+set network ike gateway Perimeter81 local-address ip 1.1.1.1
+set network ike gateway Perimeter81 peer-address ip 2.2.2.2
+set network ike gateway Perimeter81 local-id id 1.1.1.1
+set network ike gateway Perimeter81 local-id type ipaddr
+set network ike gateway Perimeter81 peer-id id 2.2.2.2
+set network ike gateway Perimeter81 peer-id type ipaddr
 
 ### Create IPSEC Tunnel Config
-set network tunnel ipsec P81 auto-key ipsec-crypto-profile 
-set network tunnel ipsec P81 auto-key proxy-id Proxy1 protocol any
-set network tunnel ipsec P81 auto-key proxy-id Proxy1 local 172.16.0.0/24
-set network tunnel ipsec P81 auto-key proxy-id Proxy1 remote 10.255.0.0/16
-set network tunnel ipsec P81 tunnel-monitor enable no
-set network tunnel ipsec P81 tunnel-interface tunnel.1
-set network tunnel ipsec P81 disabled no
+set network tunnel ipsec Perimeter81 auto-key ipsec-crypto-profile 
+set network tunnel ipsec Perimeter81 auto-key proxy-id Proxy1 protocol any
+set network tunnel ipsec Perimeter81 auto-key proxy-id Proxy1 local 10.10.10.0/24
+set network tunnel ipsec Perimeter81 auto-key proxy-id Proxy1 remote 10.255.0.0/16
+set network tunnel ipsec Perimeter81 tunnel-monitor enable no
+set network tunnel ipsec Perimeter81 tunnel-interface tunnel.1
+set network tunnel ipsec Perimeter81 disabled no
 
 
 ### Set Rules to allow access
@@ -53,7 +53,7 @@ set rulebase security rules "All IPSEC" destination-hip any
 set rulebase security rules "All IPSEC" action allow
 set rulebase security rules INTERNAL-LANS to any
 set rulebase security rules INTERNAL-LANS from any
-set rulebase security rules INTERNAL-LANS source 172.16.0.0/24
+set rulebase security rules INTERNAL-LANS source 10.10.10.0/24
 set rulebase security rules INTERNAL-LANS destination 10.255.0.0/16
 set rulebase security rules INTERNAL-LANS source-user any
 set rulebase security rules INTERNAL-LANS category any
