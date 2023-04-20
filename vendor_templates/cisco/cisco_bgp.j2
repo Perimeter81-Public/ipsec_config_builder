@@ -1,0 +1,14 @@
+{# BGP Config #}
+router bgp {{prem_asn}}
+ bgp router-id {{prem_bgp_ip}}
+ neighbor P81-VPN peer-group
+ neighbor P81-VPN remote-as {{p81_asn}}
+ neighbor P81-VPN update-source Loopback81
+
+ address-family ipv4
+  neighbor P81-VPN next-hop-self
+  neighbor P81-VPN soft-reconfiguration inbound
+  neighbor {{p81_ip}} route-map {{route_map_in}} in
+  neighbor {{p81_ip}} route-map {{route_map_out}} out
+  neighbor {{p81_ip}} activate
+ exit-address-family

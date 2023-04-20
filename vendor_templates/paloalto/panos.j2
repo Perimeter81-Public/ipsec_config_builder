@@ -1,0 +1,69 @@
+### Create tunnel interface
+set network interface tunnel units tunnel.1
+
+### Create IKE Profile
+set network ike crypto-profiles ike-crypto-profiles {{phase1}} hash {{ encry }}
+set network ike crypto-profiles ike-crypto-profiles {{phase1}} dh-group {{ dhg }}
+set network ike crypto-profiles ike-crypto-profiles {{phase1}} encryption [ aes-256-cbc aes-256-gcm ]
+set network ike crypto-profiles ike-crypto-profiles {{phase1}} lifetime hours {{ ph1_life }}
+
+### Create IPSEC Profile
+set network ike crypto-profiles ipsec-crypto-profiles {{phase2}} esp authentication {{ encry }}
+set network ike crypto-profiles ipsec-crypto-profiles {{phase2}} esp encryption [ aes-256-cbc aes-256-gcm ]
+set network ike crypto-profiles ipsec-crypto-profiles {{phase2}} lifetime hours {{ ph2_life }}
+set network ike crypto-profiles ipsec-crypto-profiles {{phase2}} dh-group {{ dhg }}
+
+### Create IPSEC Peer
+set network ike gateway {{p81_gw}} authentication pre-shared-key {{ psk }}
+set network ike gateway {{p81_gw}} protocol ikev2 dpd enable yes
+set network ike gateway {{p81_gw}} protocol ikev2 dpd interval {{ dpd }}
+set network ike gateway {{p81_gw}} protocol ikev2 ike-crypto-profile
+set network ike gateway {{p81_gw}} protocol version {{ike_ver}}
+set network ike gateway {{p81_gw}} protocol-common nat-traversal enable yes
+set network ike gateway {{p81_gw}} protocol-common fragmentation enable no
+set network ike gateway {{p81_gw}} local-address interface <public intf>
+set network ike gateway {{p81_gw}} local-address ip {{ prem_ip }}
+set network ike gateway {{p81_gw}} peer-address ip {{ p81_ip }}
+set network ike gateway {{p81_gw}} local-id id {{ prem_ip }}
+set network ike gateway {{p81_gw}} local-id type ipaddr
+set network ike gateway {{p81_gw}} peer-id id {{ p81_ip }}
+set network ike gateway {{p81_gw}} peer-id type ipaddr
+
+### Create IPSEC Tunnel Config
+set network tunnel ipsec {{p81_gw}} auto-key ipsec-crypto-profile {{ phase2 }}
+set network tunnel ipsec {{p81_gw}} auto-key proxy-id Proxy1 protocol any
+set network tunnel ipsec {{p81_gw}} auto-key proxy-id Proxy1 local {{prem_net}}
+set network tunnel ipsec {{p81_gw}} auto-key proxy-id Proxy1 remote {{p81_net}}
+set network tunnel ipsec {{p81_gw}} tunnel-monitor enable no
+set network tunnel ipsec {{p81_gw}} tunnel-interface tunnel.1
+set network tunnel ipsec {{p81_gw}} disabled no
+
+
+### Set Rules to allow access
+set rulebase security rules "All IPSEC" to any
+set rulebase security rules "All IPSEC" from any
+set rulebase security rules "All IPSEC" source any
+set rulebase security rules "All IPSEC" destination any
+set rulebase security rules "All IPSEC" source-user any
+set rulebase security rules "All IPSEC" category any
+set rulebase security rules "All IPSEC" application [ ike ipsec ]
+set rulebase security rules "All IPSEC" service application-default
+set rulebase security rules "All IPSEC" source-hip any
+set rulebase security rules "All IPSEC" destination-hip any
+set rulebase security rules "All IPSEC" action allow
+set rulebase security rules INTERNAL-LANS to any
+set rulebase security rules INTERNAL-LANS from any
+set rulebase security rules INTERNAL-LANS source {{prem_net}}
+set rulebase security rules INTERNAL-LANS destination {{p81_net}}
+set rulebase security rules INTERNAL-LANS source-user any
+set rulebase security rules INTERNAL-LANS category any
+set rulebase security rules INTERNAL-LANS application any
+set rulebase security rules INTERNAL-LANS service any
+set rulebase security rules INTERNAL-LANS source-hip any
+set rulebase security rules INTERNAL-LANS destination-hip any
+set rulebase security rules INTERNAL-LANS action allow
+
+{% if bgp is defined %}
+ {% include "vendor_templates/paloalto/panos10/_panos10_bgp.j2" %}
+{% endif %}
+
