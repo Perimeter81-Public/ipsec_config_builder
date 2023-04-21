@@ -56,3 +56,7 @@ config router static
         set device "Perimeter81"
     next
 end
+
+{% if bgp == true %}
+ {% include "vendor_templates/fortinet/fortios_bgp.j2" %}
+{% endif %}

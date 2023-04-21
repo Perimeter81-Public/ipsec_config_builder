@@ -14,6 +14,8 @@ def isip(ctx, param, address):
     try:
         if ipaddress.ip_address(address).is_global:
             return address
+        elif ipaddress.ip_address(address).is_private:
+            return address
         else:
             raise click.BadParameter("IP Must be Public")
     except ValueError:
@@ -46,7 +48,12 @@ def cli():
 @click.option("--ph1_life", prompt="Phase 1 Lifetime",default=8, required=True, type=int)
 @click.option("--ph2_life", prompt="Phase 2 Lifetime",default=1, required=True, type=int)
 @click.option("--dpd", prompt="Dead Peer Timer: ",default=10, required=True, type=int)
-def collect(vendor,prem_ip,prem_net,p81_gw,p81_ip,p81_net,psk,encry,integ,dhg,ph1_life,ph2_life,dpd):
+@click.option("--bgp", prompt="HA Tunnel True or False: ",default=False, required=False, type=bool)
+@click.option("--p81_asn", prompt="P81 BGP ASN: ",default=65000, required=False, type=int)
+@click.option("--p81_bgp_ip", prompt="P81 Tunnel IP: ",callback=isip)
+@click.option("--prem_asn", prompt="P81 BGP ASN: ", required=False, type=int)
+@click.option("--prem_bgp_ip", prompt="Premise Tunnel IP: ",callback=isip)
+def collect(vendor,prem_ip,prem_net,p81_gw,p81_ip,p81_net,psk,encry,integ,dhg,ph1_life,ph2_life,dpd,bgp,p81_asn,p81_bgp_ip,prem_asn,prem_bgp_ip):
     ipsec_params['vendor'] = vendor
     ipsec_params['prem_ip'] = prem_ip
     ipsec_params['prem_net'] = prem_net
@@ -60,6 +67,11 @@ def collect(vendor,prem_ip,prem_net,p81_gw,p81_ip,p81_net,psk,encry,integ,dhg,ph
     ipsec_params['ph1_life'] = ph1_life
     ipsec_params['ph2_life'] = ph2_life
     ipsec_params['dpd'] = dpd
+    ipsec_params['bgp'] = bgp
+    ipsec_params['p81_asn'] = p81_asn
+    ipsec_params['p81_bgp_ip'] = p81_bgp_ip
+    ipsec_params['prem_asn'] = prem_asn
+    ipsec_params['prem_bgp_ip'] = prem_bgp_ip
     print(ipsec_params)
     with open(f'./devices_vars/{vendor}.yml',"w+") as file:
         yaml.dump(ipsec_params,file,sort_keys=False)

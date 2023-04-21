@@ -6,11 +6,11 @@ crypto isakmp policy 10
 
 
 
-crypto isakmp key pre address 2.2.2.2
+crypto isakmp key PRE address 2.2.2.2
 
 
 crypto ikev2 keyring p81-keyring
-  peer Perimter81
+  peer Perimeter81
   description Perimeter81
   address 2.2.2.2
   pre-shared-key local passw0rd1
@@ -18,7 +18,7 @@ crypto ikev2 keyring p81-keyring
 
 
 
-crypto ipsec transform-set  esp-3des esp-md5-hmac
+crypto ipsec transform-set  esp-aes256 esp-sha256-hmac
  mode tunnel
 
 
@@ -31,8 +31,8 @@ keyring local
 
 
 crypto ikev2 proposal -proposal
- encryption 3des
- integrity md5
+ encryption aes256
+ integrity sha256
  group 14
 
 
@@ -42,7 +42,7 @@ crypto ipsec profile -profile
 
 
 
-interface 
+interface tunnel 1
  ip address 172.17.200.10 255.255.255.0 <--- replace with address from range
  ip mtu 1400
  ip nat inside
@@ -53,5 +53,20 @@ interface
  tunnel protection ipsec profile -profile
 
 
-ip route 10.0.1.0/24 
+ip route 10.255.0.0/16 tunnel 1
 
+
+ 
+router bgp 65100
+ bgp router-id 169.254.1.2
+ neighbor P81-VPN peer-group
+ neighbor P81-VPN remote-as 65000
+ neighbor P81-VPN update-source Loopback81
+
+ address-family ipv4
+  neighbor P81-VPN next-hop-self
+  neighbor P81-VPN soft-reconfiguration inbound
+  neighbor 2.2.2.2 route-map  in
+  neighbor 2.2.2.2 route-map  out
+  neighbor 2.2.2.2 activate
+ exit-address-family

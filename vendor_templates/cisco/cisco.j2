@@ -55,6 +55,6 @@ interface tunnel 1
 {# Routes #}
 ip route {{ p81_net }} tunnel 1
 
-{% if bgp is defined %}
+{% if bgp == true %}
  {% include "cisco/cisco_bgp.j2" %}
 {% endif %}

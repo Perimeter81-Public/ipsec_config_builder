@@ -63,7 +63,7 @@ set rulebase security rules INTERNAL-LANS source-hip any
 set rulebase security rules INTERNAL-LANS destination-hip any
 set rulebase security rules INTERNAL-LANS action allow
 
-{% if bgp is defined %}
+{% if bgp == true %}
  {% include "vendor_templates/paloalto/panos10/_panos10_bgp.j2" %}
 {% endif %}
 
