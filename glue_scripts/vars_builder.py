@@ -21,6 +21,16 @@ def isip(ctx, param, address):
     except ValueError:
         raise click.BadParameter("Re-enter IPv4 Address ex 1.1.1.1 ")
 
+def tunnelip(ctx, param, address):
+    tun_space = ipaddress.ip_network("169.254.0.0/16")
+    try:
+        if ipaddress.ip_address(address).is_private and ipaddress.ip_address(address) in list(tun_space.hosts()):
+            return address
+        else:
+            raise click.BadParameter("Tunnel IPs must be in 169.254.0.0/16 Space")
+    except ValueError:
+        raise click.BadParameter("Tunnel IPs must be in 169.254.0.0/16 Space")
+
 #Function to validate ip prefix
 def isnet(ctx, param , prefix):
     try:
@@ -50,9 +60,9 @@ def cli():
 @click.option("--dpd", prompt="Dead Peer Timer: ",default=10, required=True, type=int)
 @click.option("--bgp", prompt="HA Tunnel True or False: ",default=False, required=False, type=bool)
 @click.option("--p81_asn", prompt="P81 BGP ASN: ",default=65000, required=False, type=int)
-@click.option("--p81_bgp_ip", prompt="P81 Tunnel IP: ",callback=isip)
+@click.option("--p81_bgp_ip", prompt="P81 Tunnel IP: ",callback=tunnelip)
 @click.option("--prem_asn", prompt="P81 BGP ASN: ", required=False, type=int)
-@click.option("--prem_bgp_ip", prompt="Premise Tunnel IP: ",callback=isip)
+@click.option("--prem_bgp_ip", prompt="Premise Tunnel IP: ",callback=tunnelip)
 def collect(vendor,prem_ip,prem_net,p81_gw,p81_ip,p81_net,psk,encry,integ,dhg,ph1_life,ph2_life,dpd,bgp,p81_asn,p81_bgp_ip,prem_asn,prem_bgp_ip):
     ipsec_params['vendor'] = vendor
     ipsec_params['prem_ip'] = prem_ip
