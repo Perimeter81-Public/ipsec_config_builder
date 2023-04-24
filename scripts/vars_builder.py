@@ -3,7 +3,7 @@
 
 import click
 import yaml
-from render import render_cfg
+from scripts.render import render_cfg
 import time
 import ipaddress
 
