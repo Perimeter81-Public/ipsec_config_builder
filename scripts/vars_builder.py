@@ -42,11 +42,14 @@ def isnet(ctx, param , prefix):
         raise click.BadParameter("Enter a valid subnet ex 10.0.0.0/24 ")
 
 def passcheck(ctx, param , password):
-    pw = str(password)
-    result = pw.isalnum() and len(pw) < 63
+    password = str(password)
     try:
-        if result is True:
+        alpha = password.isalnum()
+        length = len(password) < 63
+        if alpha and length is True:
             return password
+        else:
+            raise click.BadParameter("Password can contain only alphanumeric characters , between 0 - 64 characters or start with 0.")
     except ValueError:
         raise click.BadParameter("Password can contain only alphanumeric characters , between 0 - 64 characters or start with 0.")
 
