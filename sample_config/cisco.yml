@@ -6,7 +6,7 @@ crypto isakmp policy 10
 
 
 
-crypto isakmp key PRESHARE address 2.2.2.2
+crypto isakmp key PRESHARE1 address 2.2.2.2
 
 
 crypto ikev2 keyring p81-keyring

@@ -12,7 +12,7 @@ import yaml
 
 
 def load_templ(vendor):
-    os.chdir('./vendor_templates/')
+    os.chdir('../vendor_templates/')
     if vendor == 'cisco':
         file = ('cisco/cisco.j2')
         template = env.get_template(file)

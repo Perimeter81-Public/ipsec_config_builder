@@ -10,15 +10,15 @@ add dh-group=14 dpd-interval=10s enc-algorithm=aes256 hash-algorithm=sha256 name
 
 #Define the Peer and ISKAKMP Mode
 /ip ipsec peer
-add address=2.2.2.2 exchange-mode= local-address=1.1.1.1 name=Perimeter81 profile=Perimeter81
+add address=9.9.9.9 exchange-mode= local-address=5.5.5.5 name=Perimeter81 profile=Perimeter81
 
 #Defind the Identity and Pre Share Key
 /ip ipsec identity
-add my-id=address:1.1.1.1 peer=Perimeter81 secret=PRESHARE
+add my-id=address:5.5.5.5 peer=Perimeter81 secret=Password1
 
 #Create the Interesting Traffic Profile
 /ip ipsec policy
-add dst-address=0.0.0.0/0 peer=Perimeter81 proposal=Perimeter81-Proposal sa-dst-address=2.2.2.2 sa-src-address=1.1.1.1 src-address=0.0.0.0/0 tunnel=yes
+add dst-address=0.0.0.0/0 peer=Perimeter81 proposal=Perimeter81-Proposal sa-dst-address=9.9.9.9 sa-src-address=5.5.5.5 src-address=0.0.0.0/0 tunnel=yes
 
 #Ensure the Firewall Permits the Access
 /ip firewall address-list
@@ -26,8 +26,8 @@ add dst-address=0.0.0.0/0 peer=Perimeter81 proposal=Perimeter81-Proposal sa-dst-
 
 # Create Address Lists to Use in Policy
 /ip firewall address-list
-add address=2.2.2.2 list=IPSECPEER
-add address=10.0.0.0/24 list=VPN
+add address=9.9.9.9 list=IPSECPEER
+add address=10.2.0.0/24 list=VPN
 add address=10.255.0.0/16 list=VPN
 
 #Create Firewall access for IPSEC
