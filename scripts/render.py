@@ -7,7 +7,6 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined, ChoiceLoader
 file_loader = FileSystemLoader('.')
 #Load Environment
 env = Environment(autoescape=True,loader=file_loader)
-#env = Environment(loader=file_loader)
 import yaml
 
 
