@@ -71,12 +71,12 @@ def cli():
 @click.option("--dhg",prompt=True, default="14", type=click.Choice(['2','5','14','19','20','21'], case_sensitive=False, ))
 @click.option("--ph1_life", prompt="Phase 1 Lifetime",default=8, required=True, type=int)
 @click.option("--ph2_life", prompt="Phase 2 Lifetime",default=1, required=True, type=int)
-@click.option("--dpd", prompt="Dead Peer Timer: ",default=10, required=True, type=int)
-@click.option("--bgp", prompt="HA Tunnel True or False: ",default=False, required=False, type=bool)
-@click.option("--p81_asn", prompt="P81 BGP ASN: ",default=65000, required=False, type=int)
-@click.option("--p81_bgp_ip", prompt="P81 Tunnel IP: ",default="169.254.1.1", callback=tunnelip)
-@click.option("--prem_asn", prompt="P81 BGP ASN: ",default=65100, required=False, type=int)
-@click.option("--prem_bgp_ip", prompt="Premise Tunnel IP: ",default="169.254.1.2", callback=tunnelip)
+@click.option("--dpd", prompt="Dead Peer Timer ",default=10, required=True, type=int)
+@click.option("--bgp", prompt="HA Tunnel True or False ",default=False, required=False, type=bool)
+@click.option("--p81_asn", prompt="P81 BGP ASN ",default=65000, required=False, type=int)
+@click.option("--p81_bgp_ip", prompt="P81 Tunnel IP ",default="169.254.1.1", callback=tunnelip)
+@click.option("--prem_asn", prompt="P81 BGP ASN ",default=65100, required=False, type=int)
+@click.option("--prem_bgp_ip", prompt="Premise Tunnel IP ",default="169.254.1.2", callback=tunnelip)
 def collect(vendor,prem_ip,prem_net,p81_gw,p81_ip,p81_net,psk,encry,integ,dhg,ph1_life,ph2_life,dpd,bgp,p81_asn,p81_bgp_ip,prem_asn,prem_bgp_ip):
     ipsec_params['vendor'] = vendor
     ipsec_params['prem_ip'] = prem_ip

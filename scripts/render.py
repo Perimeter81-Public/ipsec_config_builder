@@ -2,14 +2,12 @@
 #Python Script to load the dictionary file and jinja2 template to create a configuration
 import sys
 import os
-from jinja2 import Environment, FileSystemLoader, StrictUndefined, ChoiceLoader
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
+import yaml
 #Local Directory
 file_loader = FileSystemLoader('.')
 #Load Environment
-env = Environment(autoescape=True,loader=file_loader)
-import yaml
-
-
+env = Environment(autoescape=True, loader=file_loader)
 
 def load_templ(vendor):
     os.chdir('../vendor_templates/')
