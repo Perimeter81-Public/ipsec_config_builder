@@ -35,7 +35,7 @@ def load_templ(vendor):
 def render_cfg(vendor):
     template = load_templ(vendor)
     with open(f'../devices_vars/{vendor}.yml') as info2:
-        device_dict = yaml.load(info2, Loader=yaml.FullLoader)
+        device_dict = yaml.safe_load(info2)
         #This will take the hostfile file variables and run through the jinja2 file and output a yaml file
         vendor_config = template.render(device_dict, undefined=StrictUndefined)
         #Create the config file

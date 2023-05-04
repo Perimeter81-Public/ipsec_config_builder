@@ -20,7 +20,7 @@ config vpn ipsec phase1-interface
         set comments "Phase 1 Config for Perimeter81"
         set dhgrp 14
         set remote-gw 2.2.2.2
-        set psksecret PRESHARE
+        set psksecret PRESHARE1
         set dpd-retrycount 10
         set dpd-retryinterval 30
     next
@@ -51,8 +51,24 @@ end
 
 
 config router static
-    edit X
+    edit 1
         set dst 10.255.0.0/16
         set device "Perimeter81"
     next
 end
+
+
+ 
+config router bgp
+    set as 65100
+    set router-id 169.254.1.2
+    config neighbor
+        edit "169.254.1.1"
+            set remote-as 65000
+        next
+    end
+    config network
+        edit 1
+            set prefix 10.0.0.0/16
+        next
+    end
