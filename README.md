@@ -19,7 +19,7 @@ python3 vars_builder.py
 ```
 This will allow users to reenter incorrect values with a helpful prompt. 
 
-![](img.png)
+![](output.png)
 
 This script will prompt the users for values for the IPSEC Tunnel and Optional HA Tunnel / BGP Configuration. 
 The script will have several default values that are based on the default values in the Perimeter81 builds. 
@@ -28,6 +28,7 @@ The final output will be printed to the screen but also
 - The variables file can be found under the vendor name in  `device_vars` . 
 - The configuration file will be found under the vendor name in `sample_config` .
 
+![](output2.png)
 
 ### vendor_templates 
 is the directory of all the vendors. each subdirectory refernces 
