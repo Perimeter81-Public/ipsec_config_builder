@@ -6,7 +6,7 @@ crypto isakmp policy 10
 
 
 
-crypto isakmp key PRESHARE1 address 2.2.2.2
+crypto isakmp key Password1 address 2.2.2.2
 
 
 crypto ikev2 keyring p81-keyring
@@ -55,18 +55,3 @@ interface tunnel 1
 
 ip route 10.255.0.0/16 tunnel 1
 
-
- 
-router bgp 65100
- bgp router-id 169.254.1.2
- neighbor P81-VPN peer-group
- neighbor P81-VPN remote-as 65000
- neighbor P81-VPN update-source Loopback81
-
- address-family ipv4
-  neighbor P81-VPN next-hop-self
-  neighbor P81-VPN soft-reconfiguration inbound
-  neighbor 2.2.2.2 route-map  in
-  neighbor 2.2.2.2 route-map  out
-  neighbor 2.2.2.2 activate
- exit-address-family

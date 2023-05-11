@@ -13,12 +13,12 @@ crypto ikev2 keyring p81-keyring
   peer {{ p81_gw }}
   description Perimeter81
   address {{ p81_ip }}
-  pre-shared-key local passw0rd1
-  pre-shared-key remote passw0rd1
+  pre-shared-key local {{ psk }}
+  pre-shared-key remote {{ psk }}
 
 
 {# Phase 2 Proposal #}
-crypto ipsec transform-set {{transform_set_name}} esp-{{ encry }} esp-{{ integ }}-hmac
+crypto ipsec transform-set {{ transform_set_name }} esp-{{ encry }} esp-{{ integ }}-hmac
  mode tunnel
 
 {# Phase 1 Profile #}
@@ -37,20 +37,20 @@ crypto ikev2 proposal {{ phase1 }}-proposal
 
 {# Phase 2 Profile #}
 crypto ipsec profile {{ phase2 }}-profile
- set transform-set {{transform_set_name}}
- set ikev2-profile {{phase1}}-profile
+ set transform-set {{ transform_set_name }}
+ set ikev2-profile {{ phase1 }}-profile
 
 
 {# Interface Config #}
 interface tunnel 1
- ip address 172.17.200.10 255.255.255.0 <--- replace with address from range
+ ip address {{ prem_bgp_ip }} 255.255.255.0
  ip mtu 1400
  ip nat inside
  ip tcp adjust-mss 1360
  tunnel source GigabitEthernet1 <--- replace with source interface
  tunnel mode ipsec ipv4
- tunnel destination {{p81_ip}}
- tunnel protection ipsec profile {{phase2}}-profile
+ tunnel destination {{ p81_ip }}
+ tunnel protection ipsec profile {{ phase2 }}-profile
 
 {# Routes #}
 ip route {{ p81_net }} tunnel 1

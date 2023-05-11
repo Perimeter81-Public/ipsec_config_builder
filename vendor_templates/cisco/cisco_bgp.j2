@@ -1,8 +1,8 @@
 {# BGP Config #}
-router bgp {{prem_asn}}
- bgp router-id {{prem_bgp_ip}}
+router bgp {{ prem_asn }}
+ bgp router-id {{ prem_bgp_ip }}
  neighbor P81-VPN peer-group
- neighbor P81-VPN remote-as {{p81_asn}}
+ neighbor P81-VPN remote-as {{ p81_asn }}
  neighbor P81-VPN update-source Loopback81
 
  address-family ipv4
