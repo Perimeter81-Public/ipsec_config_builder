@@ -13,8 +13,8 @@ crypto ikev2 keyring p81-keyring
   peer Perimeter81
   description Perimeter81
   address 2.2.2.2
-  pre-shared-key local passw0rd1
-  pre-shared-key remote passw0rd1
+  pre-shared-key local Password1
+  pre-shared-key remote Password1
 
 
 
@@ -43,11 +43,11 @@ crypto ipsec profile -profile
 
 
 interface tunnel 1
- ip address 172.17.200.10 255.255.255.0 <--- replace with address from range
+ ip address 169.254.1.2 255.255.255.0
  ip mtu 1400
  ip nat inside
  ip tcp adjust-mss 1360
- tunnel source GigabitEthernet1 <--- replace with source interface
+ tunnel source GigabitEthernet1
  tunnel mode ipsec ipv4
  tunnel destination 2.2.2.2
  tunnel protection ipsec profile -profile
