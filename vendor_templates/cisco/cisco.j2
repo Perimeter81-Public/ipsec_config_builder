@@ -47,7 +47,7 @@ interface tunnel 1
  ip mtu 1400
  ip nat inside
  ip tcp adjust-mss 1360
- tunnel source GigabitEthernet1 <--- replace with source interface
+ tunnel source GigabitEthernet1
  tunnel mode ipsec ipv4
  tunnel destination {{ p81_ip }}
  tunnel protection ipsec profile {{ phase2 }}-profile
