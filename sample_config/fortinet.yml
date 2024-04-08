@@ -1,15 +1,15 @@
 
 set tunnels= [
     {
-      'tunnelname':'Perimeter81',
-      'remote_IP':'2.2.2.2',
+      'tunnelname':'HyderabadOffice',
+      'remote_IP':'139.59.41.131',
       'network_id':'1',
       'interface':'port1'
     }
 
 
 config vpn ipsec phase1-interface
-    edit "Perimeter81"
+    edit "HyderabadOffice"
         set interface "port1"
         set ike-version 
         set peertype any
@@ -19,8 +19,8 @@ config vpn ipsec phase1-interface
         set dpd on-idle
         set comments "Phase 1 Config for Perimeter81"
         set dhgrp 14
-        set remote-gw 2.2.2.2
-        set psksecret PRESHARE1
+        set remote-gw 139.59.41.131
+        set psksecret Password1
         set dpd-retrycount 10
         set dpd-retryinterval 30
     next
@@ -28,8 +28,8 @@ end
 
 
 config vpn ipsec phase2-interface
-    edit "Perimeter81"
-        set phase1name "Perimeter81"
+    edit "HyderabadOffice"
+        set phase1name "HyderabadOffice"
         set proposal aes256-sha256
         set dhgrp 14
         set auto-negotiate enable
@@ -39,7 +39,7 @@ end
 
 
 config system interface
-    edit "Perimeter81"
+    edit "HyderabadOffice"
         set vdom "root"
         set ip 0.0.0.0 255.255.255.255
         set allowaccess ping
@@ -57,18 +57,3 @@ config router static
     next
 end
 
-
- 
-config router bgp
-    set as 65100
-    set router-id 169.254.1.2
-    config neighbor
-        edit "169.254.1.1"
-            set remote-as 65000
-        next
-    end
-    config network
-        edit 1
-            set prefix 10.0.0.0/16
-        next
-    end

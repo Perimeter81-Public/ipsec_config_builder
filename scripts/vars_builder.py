@@ -3,7 +3,7 @@
 
 import click
 import yaml
-from scripts.render import render_cfg
+from  render import render_cfg
 import time
 import ipaddress
 
@@ -66,8 +66,8 @@ def cli():
 @click.option("--p81_ip", prompt="Gateway IP", callback=isip, help="P81 Gateway IP.")
 @click.option("--p81_net", prompt="P81 Subnet", default="10.255.0.0/16", callback=isnet, type=str )
 @click.option("--psk", prompt="Preshare Key", callback=passcheck, confirmation_prompt=True )
-@click.option("--encry",prompt=True, default="aes256", type=click.Choice(["3des", "blowfish128", "blowfish192", "blowfish256", "aes128", "aes192", "aes256"],  case_sensitive=False,))
-@click.option("--integ",prompt=True, default="sha256", type=click.Choice(['md5', 'sha1', 'sha256', 'sha384'], case_sensitive=False, ))
+@click.option("--encry",prompt=True, default="aes256", type=click.Choice(["3des", "blowfish128", "blowfish192", "blowfish256", "aes 128", "aes 192", "aes 256"],  case_sensitive=False,))
+@click.option("--integ",prompt=True, default="sha256", type=click.Choice(['md5', 'sha1', 'sha 256', 'sha 384'], case_sensitive=False, ))
 @click.option("--dhg",prompt=True, default="14", type=click.Choice(['2','5','14','19','20','21'], case_sensitive=False, ))
 @click.option("--ph1_life", prompt="Phase 1 Lifetime",default=8, required=True, type=int)
 @click.option("--ph2_life", prompt="Phase 2 Lifetime",default=1, required=True, type=int)
@@ -97,7 +97,7 @@ def collect(vendor,prem_ip,prem_net,p81_gw,p81_ip,p81_net,psk,encry,integ,dhg,ph
     ipsec_params['prem_asn'] = prem_asn
     ipsec_params['prem_bgp_ip'] = prem_bgp_ip
     print(ipsec_params)
-    with open(f'../devices_vars/{vendor}.yml',"w+") as file:
+    with open(f'{vendor}.yml',"w+") as file:
         yaml.dump(ipsec_params,file,sort_keys=False)
         file.close()
     time.sleep(5)
