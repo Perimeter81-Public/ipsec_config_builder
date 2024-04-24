@@ -59,15 +59,16 @@ def cli():
     pass
 
 @click.command("Get VPN Details")
-@click.option("--vendor", prompt=True, type=click.Choice(['cisco' , 'paloalto' , 'fortinet' , 'mikrotik'], case_sensitive=False,))
+@click.option("--vendor", prompt=True, type=click.Choice(['cisco' , 'paloalto' , 'fortinet' , 'mikrotik', 'strongswan'], case_sensitive=False,))
 @click.option("--prem_ip", prompt="Premise IP Address", callback=isip, help="Public IP Client Side.")
+@click.option("--prem_id", prompt="Premise ID (can be public or private)", callback=isip, help="IPSEC Tunnel IP.")
 @click.option("--prem_net", prompt="Premise Subnet", callback=isnet, type=str )
-@click.option("--p81_gw", prompt="VPN Name", default="Perimeter81", help="Name for the IKE GW.")
+@click.option("--vpn_name", prompt="VPN Name", default="Perimeter81", help="Name for the IKE GW.")
 @click.option("--p81_ip", prompt="Gateway IP", callback=isip, help="P81 Gateway IP.")
 @click.option("--p81_net", prompt="P81 Subnet", default="10.255.0.0/16", callback=isnet, type=str )
 @click.option("--psk", prompt="Preshare Key", callback=passcheck, confirmation_prompt=True )
-@click.option("--encry",prompt=True, default="aes256", type=click.Choice(["3des", "blowfish128", "blowfish192", "blowfish256", "aes 128", "aes 192", "aes 256"],  case_sensitive=False,))
-@click.option("--integ",prompt=True, default="sha256", type=click.Choice(['md5', 'sha1', 'sha 256', 'sha 384'], case_sensitive=False, ))
+@click.option("--encry",prompt=True, default="aes 256", type=click.Choice(["3des", "blowfish128", "blowfish192", "blowfish256", "aes 128", "aes 192", "aes 256"],  case_sensitive=False,))
+@click.option("--integ",prompt=True, default="sha 256", type=click.Choice(['md5', 'sha1', 'sha 256', 'sha 384'], case_sensitive=False, ))
 @click.option("--dhg",prompt=True, default="14", type=click.Choice(['2','5','14','19','20','21'], case_sensitive=False, ))
 @click.option("--ph1_life", prompt="Phase 1 Lifetime",default=8, required=True, type=int)
 @click.option("--ph2_life", prompt="Phase 2 Lifetime",default=1, required=True, type=int)
@@ -77,11 +78,12 @@ def cli():
 @click.option("--p81_bgp_ip", prompt="P81 Tunnel IP ",default="169.254.1.1", callback=tunnelip)
 @click.option("--prem_asn", prompt="P81 BGP ASN ",default=65100, required=False, type=int)
 @click.option("--prem_bgp_ip", prompt="Premise Tunnel IP ",default="169.254.1.2", callback=tunnelip)
-def collect(vendor,prem_ip,prem_net,p81_gw,p81_ip,p81_net,psk,encry,integ,dhg,ph1_life,ph2_life,dpd,bgp,p81_asn,p81_bgp_ip,prem_asn,prem_bgp_ip):
+def collect(vendor,prem_ip,prem_id,prem_net,vpn_name,p81_ip,p81_net,psk,encry,integ,dhg,ph1_life,ph2_life,dpd,bgp,p81_asn,p81_bgp_ip,prem_asn,prem_bgp_ip):
     ipsec_params['vendor'] = vendor
     ipsec_params['prem_ip'] = prem_ip
+    ipsec_params['prem_id'] = prem_id
     ipsec_params['prem_net'] = prem_net
-    ipsec_params['p81_gw'] = p81_gw
+    ipsec_params['vpn_name'] = vpn_name
     ipsec_params['p81_ip'] = p81_ip
     ipsec_params['p81_net'] = p81_net
     ipsec_params['psk'] = psk

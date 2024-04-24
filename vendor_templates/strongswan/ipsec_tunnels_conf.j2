@@ -1,0 +1,24 @@
+# BEGIN ipsec-tunnels.conf {{ vpn_name }}
+conn {{ vpn_name }}
+    auto=start
+    left={{ prem_ip }}
+    leftid={{ prem_id }}
+    right={{ p81_ip }}
+    rightid={{ p81_ip }}
+    type=tunnel
+    leftauth={{ psk }}
+    rightauth={{ psk }}
+    keyexchange=ikev2
+    ike=aes256-sha256-modp2048
+    esp=aes256-sha256-modp2048
+    ikelifetime=8h
+    lifetime=1h
+    keyingtries=%forever
+    leftsubnet={{ prem_net }}
+    rightsubnet={{ p81_net }}
+    dpddelay=10s
+    dpdtimeout=30s
+    dpdaction=restart
+    mark=100
+
+# END ipsec-tunnels.conf {{ vpn_name }}

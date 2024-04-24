@@ -66,12 +66,10 @@ router bgp 65100
  bgp router-id 169.254.100.2
  neighbor P81-VPN peer-group
  neighbor P81-VPN remote-as 64512
- neighbor P81-VPN update-source Loopback81
+ neighbor P81-VPN update-source Tunnel1
 
  address-family ipv4
   neighbor P81-VPN next-hop-self
   neighbor P81-VPN soft-reconfiguration inbound
-  neighbor 64.226.130.136 route-map  in
-  neighbor 64.226.130.136 route-map  out
   neighbor 64.226.130.136 activate
  exit-address-family
