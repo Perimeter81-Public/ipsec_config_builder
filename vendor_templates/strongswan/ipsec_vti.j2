@@ -1,3 +1,19 @@
+# Enable Kernel Packet Forwarding
+sysctl -w net.ipv4.ip_forward=1
+sysctl -w net.ipv6.conf.all.forwarding=1
+sysctl -w net.ipv4.conf.all.accept_redirects=0
+sysctl -w net.ipv4.conf.all.send_redirects=0
+
+# Download Strongswan
+sudo apt update
+sudo apt install strongswan
+
+# Add iptables rules
+iptables -I INPUT 1 -p udp -m multiport --dports 500,4500 -j ACCEPT
+
+# Save Rules
+iptables-save > /etc/iptables/rules.v4
+
 # Begin Add VTI & Routes
 ip link add {{ vpn_name }} type vti local {{ prem_id }} remote {{ p81_ip }}
 ip addr add 169.254.2.193/30 remote 169.254.2.194/30 dev {{ vpn_name }}
