@@ -55,5 +55,6 @@ def render_cfg(vendor):
 
 if __name__ == '__main__':
     print(os.getcwd())
-    vendor = sys.argv[1]
+    vendor = "strongswan"
+    #vendor = sys.argv[1]
     render_cfg(vendor)

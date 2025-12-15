@@ -1,16 +1,18 @@
 
-crypto isakmp policy 10
- encryption aes 256
- authentication pre-share
+crypto ikev2 proposal phase1-proposal 
+ encryption aes-cbc-256
+ integrity sha256
  group 14
 
-
-
-crypto isakmp key Perimeter81 address 64.226.130.136
-
+crypto ikev2 keyring p81-keyring
+ peer Perimeter81
+  description Perimeter81
+  address 64.176.166.62
+  pre-shared-key local Perimeter81
+  pre-shared-key remote Perimeter81
 
 crypto ipsec transform-set p81-transform-set esp-aes 256  esp-sha256-hmac
- mode tunnel4
+ mode tunnel
 
 
 crypto ipsec profile phase2-profile
@@ -21,7 +23,7 @@ crypto ipsec profile phase2-profile
 crypto ikev2 keyring p81-keyring
   peer Perimeter81
   description Perimeter81
-  address 64.226.130.136
+  address 64.176.166.62
   pre-shared-key local Perimeter81
   pre-shared-key remote Perimeter81
 
@@ -30,8 +32,8 @@ crypto ikev2 keyring p81-keyring
 
 
 crypto ikev2 profile phase1-profile
-match identity remote address 64.226.130.136 255.255.255.255
-identity local address 34.224.69.45
+match identity remote address 64.176.166.62 255.255.255.255
+identity local address 199.203.248.78
 authentication local pre-share
 authentication remote pre-share
 keyring local 
@@ -44,32 +46,15 @@ crypto ikev2 proposal phase1-proposal
  group 14
 
 
-
-
-
-interface tunnel 1
+interface tunnel 10
  ip address 169.254.100.2 255.255.255.0
  ip mtu 1400
  ip nat inside
  ip tcp adjust-mss 1360
- tunnel source GigabitEthernet1
+ tunnel source 199.203.248.78
  tunnel mode ipsec ipv4
- tunnel destination 64.226.130.136
+ tunnel destination 64.176.166.62
  tunnel protection ipsec profile phase2-profile
 
 
-ip route 10.130.0.0/16 tunnel 1
-
-
- 
-router bgp 65100
- bgp router-id 169.254.100.2
- neighbor P81-VPN peer-group
- neighbor P81-VPN remote-as 64512
- neighbor P81-VPN update-source Tunnel1
-
- address-family ipv4
-  neighbor P81-VPN next-hop-self
-  neighbor P81-VPN soft-reconfiguration inbound
-  neighbor 64.226.130.136 activate
- exit-address-family
+ip route 10.253.0.0/16 tunnel 10
