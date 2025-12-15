@@ -8,6 +8,15 @@ crypto isakmp policy 10
 {# Ph1 Key #}
 crypto isakmp key {{ psk }} address {{ p81_ip }}
 
+{# Phase 2 Proposal #}
+crypto ipsec transform-set p81-transform-set esp-aes 256  esp-{{ integ }}-hmac
+ mode tunnel4
+
+{# Phase 2 Profile #}
+crypto ipsec profile phase2-profile
+ set transform-set p81-transform-set
+ set ikev2-profile phase1-profile
+
 {# Ph2 Key #}
 crypto ikev2 keyring p81-keyring
   peer {{ p81_gw }}
@@ -17,28 +26,24 @@ crypto ikev2 keyring p81-keyring
   pre-shared-key remote {{ psk }}
 
 
-{# Phase 2 Proposal #}
-crypto ipsec transform-set {{ transform_set_name }} esp-{{ encry }} esp-{{ integ }}-hmac
- mode tunnel
+
 
 {# Phase 1 Profile #}
-crypto ikev2 profile {{ phase1 }}-profile
+crypto ikev2 profile phase1-profile
 match identity remote address {{ p81_ip }} 255.255.255.255
+identity local address {{ prem_ip }}
 authentication local pre-share
 authentication remote pre-share
 keyring local {{ keyring }}
 
 
 {# Phase 1 Proposals #}
-crypto ikev2 proposal {{ phase1 }}-proposal
+crypto ikev2 proposal phase1-proposal
  encryption {{ encry }}
  integrity {{ integ }}
  group {{ dhg }}
 
-{# Phase 2 Profile #}
-crypto ipsec profile {{ phase2 }}-profile
- set transform-set {{ transform_set_name }}
- set ikev2-profile {{ phase1 }}-profile
+
 
 
 {# Interface Config #}
@@ -50,7 +55,7 @@ interface tunnel 1
  tunnel source GigabitEthernet1
  tunnel mode ipsec ipv4
  tunnel destination {{ p81_ip }}
- tunnel protection ipsec profile {{ phase2 }}-profile
+ tunnel protection ipsec profile phase2-profile
 
 {# Routes #}
 ip route {{ p81_net }} tunnel 1

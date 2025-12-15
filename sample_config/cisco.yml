@@ -1,57 +1,60 @@
 
-crypto isakmp policy 10
- encryption aes 256
- authentication pre-share
+crypto ikev2 proposal phase1-proposal 
+ encryption aes-cbc-256
+ integrity sha256
  group 14
 
+crypto ikev2 keyring p81-keyring
+ peer Perimeter81
+  description Perimeter81
+  address 64.176.166.62
+  pre-shared-key local Perimeter81
+  pre-shared-key remote Perimeter81
+
+crypto ipsec transform-set p81-transform-set esp-aes 256  esp-sha256-hmac
+ mode tunnel
 
 
-crypto isakmp key Password1 address 2.2.2.2
+crypto ipsec profile phase2-profile
+ set transform-set p81-transform-set
+ set ikev2-profile phase1-profile
 
 
 crypto ikev2 keyring p81-keyring
   peer Perimeter81
   description Perimeter81
-  address 2.2.2.2
-  pre-shared-key local Password1
-  pre-shared-key remote Password1
+  address 64.176.166.62
+  pre-shared-key local Perimeter81
+  pre-shared-key remote Perimeter81
 
 
 
-crypto ipsec transform-set  esp-aes256 esp-sha256-hmac
- mode tunnel
 
 
-crypto ikev2 profile -profile
-match identity remote address 2.2.2.2 255.255.255.255
+crypto ikev2 profile phase1-profile
+match identity remote address 64.176.166.62 255.255.255.255
+identity local address 199.203.248.78
 authentication local pre-share
 authentication remote pre-share
 keyring local 
 
 
 
-crypto ikev2 proposal -proposal
+crypto ikev2 proposal phase1-proposal
  encryption aes256
  integrity sha256
  group 14
 
 
-crypto ipsec profile -profile
- set transform-set 
- set ikev2-profile -profile
-
-
-
-interface tunnel 1
- ip address 169.254.1.2 255.255.255.0
+interface tunnel 10
+ ip address 169.254.100.2 255.255.255.0
  ip mtu 1400
  ip nat inside
  ip tcp adjust-mss 1360
- tunnel source GigabitEthernet1
+ tunnel source 199.203.248.78
  tunnel mode ipsec ipv4
- tunnel destination 2.2.2.2
- tunnel protection ipsec profile -profile
+ tunnel destination 64.176.166.62
+ tunnel protection ipsec profile phase2-profile
 
 
-ip route 10.255.0.0/16 tunnel 1
-
+ip route 10.253.0.0/16 tunnel 10

@@ -1,0 +1,27 @@
+# Begin ipsec.conf - strongSwan IPsec configuration file
+config setup
+         charondebug="all"
+         uniqueids = yes
+
+# Define Connections connections here
+conn {{ vpn_name }}
+       type=tunnel
+       auto=start
+       keyexchange=ikev2
+       authby=secret
+       left={{ prem_ip }}
+       leftid={{ prem_id }}
+       leftsubnet={{ prem_net }}
+       right={{ p81_ip }}
+       rightsubnet={{ p81_net }}
+       ike=aes256-sha256-modp2048
+       esp=aes256-sha256-modp2048
+       aggressive=no
+       keyingtries=%forever
+       ikelifetime=8h
+       lifetime=1h
+       dpddelay=10s
+       dpdtimeout=30s
+       dpdaction=restart
+# End ipsec.conf
+

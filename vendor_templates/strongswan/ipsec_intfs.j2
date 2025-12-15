@@ -1,0 +1,4 @@
+ip link add AWSHA02 type vti local 169.254.2.121 remote 35.172.43.104 key 100
+ip addr add 169.254.200.1 remote 169.254.200.2 dev AWSHA02
+ip link set AWSHA02 up mtu 1400
+ip route add 192.168.100.0/24 dev AWSHA02

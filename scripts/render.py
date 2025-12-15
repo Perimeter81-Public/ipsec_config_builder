@@ -10,7 +10,7 @@ file_loader = FileSystemLoader('.')
 env = Environment(autoescape=True, loader=file_loader)
 
 def load_templ(vendor):
-    os.chdir('../vendor_templates/')
+    os.chdir('vendor_templates/')
     if vendor == 'cisco':
         file = ('cisco/cisco.j2')
         template = env.get_template(file)
@@ -25,6 +25,10 @@ def load_templ(vendor):
         return template
     elif vendor == 'mikrotik':
         file = ('mikrotik/routeros.j2')
+        template = env.get_template(file)
+        return template
+    elif vendor == 'strongswan':
+        file = ('strongswan/strongswan_base.j2')
         template = env.get_template(file)
         return template
     else:
@@ -51,5 +55,6 @@ def render_cfg(vendor):
 
 if __name__ == '__main__':
     print(os.getcwd())
-    vendor = sys.argv[1]
+    vendor = "strongswan"
+    #vendor = sys.argv[1]
     render_cfg(vendor)
